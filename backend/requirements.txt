@@ -1,0 +1,10 @@
+# Science AI Lab 백엔드 의존성
+# 인터넷 없는 교실 가정 — 최초 1회만 설치, 이후 로컬 venv 사용
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+httpx==0.28.1
+# Phase 4: MQTT 실시간 센서
+paho-mqtt==2.1.0
+# Day 4: PDF 활동지 (그래프+문서). 한글은 assets/fonts/NanumGothic 번들 사용
+matplotlib==3.11.0
+reportlab==4.5.1

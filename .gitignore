@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+backend/.venv/
+*.egg-info/
+
+# 데이터·런타임 산출물 (개인정보·대용량)
+db/lab.db
+db/lab.db-*
+db/reports/
+db/vectors/
+backend/data/*.local.json
+
+# 비밀·로컬 설정
+.env
+esp8266/lib/wifi_config.h
+
+# 로그·임시
+logs/
+*.log
+/tmp/
+
+# OS
+.DS_Store
+Thumbs.db

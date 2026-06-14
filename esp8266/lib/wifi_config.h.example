@@ -1,0 +1,12 @@
+/* Science AI Lab — WiFi 설정 (학교/모둠별)
+ * 이 파일을 wifi_config.h 로 복사한 뒤 값을 채우세요.
+ * Pi가 AP일 때 SSID는 science-lab-{모둠라벨}, 비밀번호는 교사 모드에서 확인.
+ * ⚠ 이 값은 학생 화면에 노출하지 않습니다(펌웨어에만 존재).
+ */
+#ifndef WIFI_CONFIG_H
+#define WIFI_CONFIG_H
+
+#define WIFI_SSID     "science-lab-A"
+#define WIFI_PASSWORD "change-me-1234"
+
+#endif

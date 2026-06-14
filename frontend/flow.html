@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🌐 데이터 흐름</title>
+  <style>
+    :root{ --idle:#94a3b8; --active:#22c55e; --pulse:#f59e0b; --err:#ef4444; --sel:#3b82f6; }
+    *{box-sizing:border-box;} body{margin:0;background:#0b1220;color:#e2e8f0;font-family:"Noto Sans KR",system-ui,sans-serif;height:100vh;display:flex;flex-direction:column;}
+    /* 빔프로젝터: 5m 거리 가독성 (36px+) */
+    .head{padding:18px 28px;font-size:36px;font-weight:800;display:flex;gap:16px;align-items:center;}
+    .head .exp{font-size:24px;color:#93c5fd;}
+    .stage{flex:1;display:flex;align-items:center;justify-content:center;}
+    svg{width:96%;height:80%;}
+    .node rect{fill:#1e293b;stroke:var(--idle);stroke-width:3;rx:18;transition:all .3s;}
+    .node.active rect{stroke:var(--active);}
+    .node.pulse rect{stroke:var(--pulse);fill:#3b2f12;}
+    .node.err rect{stroke:var(--err);fill:#3b1212;}
+    .node text.icon{font-size:40px;text-anchor:middle;}
+    .node text.label{font-size:22px;fill:#cbd5e1;text-anchor:middle;}
+    .node text.val{font-size:20px;fill:#fbbf24;text-anchor:middle;}
+    .edge{stroke:#334155;stroke-width:3;}
+    .particle{fill:var(--pulse);}
+    .foot{padding:12px 28px;font-size:22px;color:#94a3b8;display:flex;justify-content:space-between;}
+  </style>
+  <script src="/chat.js"></script>
+  <script defer src="/lib/alpine.min.js"></script>
+</head>
+<body x-data="flowView()" x-init="init()">
+  <div class="head">🌐 <span x-text="team"></span> <span class="exp" x-text="expTitle"></span></div>
+  <div class="stage">
+    <svg viewBox="0 0 1000 240" preserveAspectRatio="xMidYMid meet">
+      <!-- edges -->
+      <template x-for="i in [0,1,2,3]" :key="i">
+        <line class="edge" :x1="120+i*200" y1="120" :x2="120+(i+1)*200-100" y2="120"></line>
+      </template>
+      <!-- nodes -->
+      <template x-for="(n,idx) in nodes" :key="n.key">
+        <g class="node" :class="state[n.key]" :transform="`translate(${20+idx*200},40)`">
+          <rect width="160" height="160" rx="18"></rect>
+          <text class="icon" x="80" y="70" x-text="n.icon"></text>
+          <text class="label" x="80" y="110" x-text="n.label"></text>
+          <text class="val" x="80" y="140" x-text="n.val"></text>
+        </g>
+      </template>
+      <!-- particle -->
+      <circle class="particle" r="9" :cx="particle.x" :cy="120" x-show="particle.on"></circle>
+    </svg>
+  </div>
+  <div class="foot"><span x-text="'마지막 데이터: '+lastData"></span><span x-text="'⭐ '+stars"></span></div>
+
+  <script>
+  function flowView(){
+    return {
+      team:"우리 모둠", expTitle:"", stars:0, lastData:"-",
+      nodes:[{key:"sensor",icon:"🌡️",label:"센서",val:""},{key:"esp",icon:"🤖",label:"ESP",val:""},{key:"mqtt",icon:"📡",label:"MQTT",val:""},{key:"graph",icon:"📊",label:"그래프",val:""},{key:"ai",icon:"🧠",label:"AI",val:""}],
+      state:{sensor:"",esp:"",mqtt:"",graph:"",ai:""},
+      particle:{on:false,x:100},
+      init(){ this.connect(); },
+      connect(){
+        const proto=location.protocol==="https:"?"wss":"ws";
+        const ws=new WebSocket(`${proto}://${location.host}/api/flow/ws`);
+        ws.onmessage=(e)=>{ const ev=JSON.parse(e.data); if(ev.type==="flow") this.animate(ev); if(ev.type==="flow_error") this.state[ev.node]="err"; };
+        ws.onclose=()=>setTimeout(()=>this.connect(),3000);
+      },
+      animate(ev){
+        this.nodes[0].val = ev.value + (ev.unit?(' '+ev.unit):'');
+        this.lastData = new Date().toLocaleTimeString('ko-KR');
+        // 순차 펄스
+        ev.sequence.forEach((node,i)=>{
+          setTimeout(()=>{ this.state[node]="pulse"; setTimeout(()=>this.state[node]="active", ev.pulse_ms[node]||400); }, i*250);
+        });
+        // 입자 이동
+        this.particle.on=true; this.particle.x=100;
+        let step=0; const seqLen=ev.sequence.length;
+        const timer=setInterval(()=>{ step++; this.particle.x=100+step*200; if(step>=seqLen-1){ clearInterval(timer); setTimeout(()=>this.particle.on=false,300);} },250);
+      }
+    };
+  }
+  </script>
+</body>
+</html>

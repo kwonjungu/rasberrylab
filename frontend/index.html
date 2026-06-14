@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🧪 Science AI Lab</title>
+  <link rel="stylesheet" href="/style.css" />
+  <script src="/lib/marked.min.js"></script>
+  <script src="/chat.js"></script>
+  <script src="/panel.js"></script>
+  <script src="/app.js"></script>
+  <!-- Alpine 은 컴포넌트 정의 이후 마지막에 로드 -->
+  <script defer src="/lib/alpine.min.js"></script>
+</head>
+<body data-grade-tier="upper">
+  <div id="app" x-data="labApp()">
+    <!-- 헤더 -->
+    <div class="topbar">
+      <span class="title">🧪 <span x-text="teamName ? teamName + ' 모둠' : 'Science Lab'"></span></span>
+      <span class="spacer"></span>
+      <span x-show="expTitle" x-text="expTitle" style="font-size:.8em;opacity:.9"></span>
+      <button @click="onQuick({id:'help',label:'🤚 도와줘'})">🔔 도움요청</button>
+      <button @click="showHistory=!showHistory">🗂 지난대화</button>
+      <button @click="openTeacher()">🎓 교사</button>
+    </div>
+
+    <!-- 역할 (탭하면 이름 정하기) -->
+    <div class="roles" @click="showRoles=true" title="역할 정하기">
+      <template x-for="rc in roleCards" :key="rc.id">
+        <span class="role"><span x-text="rc.icon + ' ' + rc.name"></span><span x-show="roleNames[rc.id]" x-text="' · ' + roleNames[rc.id]"></span></span>
+      </template>
+      <span class="role" x-show="!roleCards.length">🔬 실험왕 📝 기록왕 🎤 발표왕 🛡 안전왕</span>
+    </div>
+
+    <!-- 메인 -->
+    <div class="main">
+      <div class="stepinfo" x-show="mode==='experiment'">
+        🧭 <span x-text="stepN"></span> / <span x-text="totalSteps"></span> 단계
+      </div>
+
+      <div class="bubble" :class="{thinking: thinking}">
+        <template x-if="thinking"><span>🤖 AI가 생각 중이야... 잠깐만 🤔</span></template>
+        <template x-if="!thinking"><div x-html="bubbleHtml || '...'"></div></template>
+        <div class="bubble-actions" x-show="bubble && !thinking">
+          <button @click="repeatTts()">🔊 다시 듣기</button>
+        </div>
+      </div>
+
+      <!-- 타이머 -->
+      <div class="timer" x-show="timer.left > 0">
+        <div class="bar"><span :style="`width:${timerPct}%`"></span></div>
+        <div class="label"><span x-text="timer.left"></span>초 남음</div>
+      </div>
+
+      <!-- 센서 표시 -->
+      <div class="sensor" x-show="sensor">
+        📊 <span x-text="sensor?.label"></span>: <span x-text="sensor?.value"></span><span x-text="sensor?.unit"></span>
+      </div>
+
+      <!-- 실시간 ESP 상태 위젯 -->
+      <div class="esp-widget" x-show="espDevices.length">
+        <template x-for="d in espDevices" :key="d.id">
+          <div class="esp-row" :class="d.status">
+            <span x-text="espIcon(d.status) + ' ' + d.id"></span>
+            <small x-text="d.sensor_type || ''"></small>
+            <svg class="spark" viewBox="0 0 100 30" preserveAspectRatio="none" x-show="sparkPoints(d.id, d.sensor_type)">
+              <polyline :points="sparkPoints(d.id, d.sensor_type)" fill="none" stroke="#3b82f6" stroke-width="2"/>
+            </svg>
+            <span class="st" x-text="d.status==='alive' ? '연결됨 ✅' : '끊김 ⚠'"></span>
+          </div>
+        </template>
+      </div>
+
+      <!-- 안전 경고 -->
+      <div class="safety" x-show="safetyWarnings.length && mode==='experiment'">
+        <b>⚠️ 안전 약속</b>
+        <template x-for="w in safetyWarnings"><div x-text="'• ' + w"></div></template>
+      </div>
+    </div>
+
+    <!-- 빠른답변 -->
+    <div class="quick">
+      <template x-for="btn in quickReplies" :key="btn.id">
+        <button :class="{help: btn.id==='help', begin: btn.id==='begin'}" @click="onQuick(btn)" x-text="btn.label"></button>
+      </template>
+    </div>
+
+    <!-- 입력바 -->
+    <div class="inputbar">
+      <input x-model="inputText" @keydown.enter="sendText()"
+        placeholder="🎤 말하거나 키보드로 적어줘..." />
+      <button @click="sendText()">전송 ▶</button>
+    </div>
+
+    <!-- 지난 대화 패널 -->
+    <div class="history-panel" x-show="showHistory" @click.outside="showHistory=false" x-cloak>
+      <h3>🗂 지난 대화</h3>
+      <template x-for="(h,i) in history" :key="i">
+        <div class="h"><span class="who" x-text="(h.role==='user'?'🙋 ':'🤖 ')"></span><span x-text="h.text"></span></div>
+      </template>
+    </div>
+  </div>
+
+    <!-- 안전수칙 복창 (실험 전 게이트) -->
+    <div class="modal-bg" x-show="showSafety" x-cloak>
+      <div class="modal safety-modal">
+        <h2>🛡 안전 약속</h2>
+        <p x-text="safety.intro"></p>
+        <p class="call" x-text="safety.call"></p>
+        <ol>
+          <template x-for="(r,i) in safety.rules" :key="i"><li x-text="r"></li></template>
+        </ol>
+        <button class="big-ok" @click="confirmSafety()">✅ 다같이 외쳤어요!</button>
+      </div>
+    </div>
+
+    <!-- 역할 정하기 -->
+    <div class="modal-bg" x-show="showRoles" @click.self="showRoles=false" x-cloak>
+      <div class="modal">
+        <h2>🧑‍🤝‍🧑 역할 정하기</h2>
+        <template x-for="rc in roleCards" :key="rc.id">
+          <div class="role-row">
+            <span x-text="rc.icon + ' ' + rc.name"></span>
+            <small x-text="rc.desc"></small>
+            <input x-model="roleNames[rc.id]" placeholder="이름(별명)" />
+          </div>
+        </template>
+        <button class="big-ok" @click="saveRoles()">확정</button>
+        <p class="hint">별명은 수업이 끝나면 자동으로 지워져요. 🔒</p>
+      </div>
+    </div>
+
+    <!-- 이어하기 제안 (부팅 시 미완료 세션) -->
+    <div class="modal-bg" x-show="showResume" x-cloak>
+      <div class="modal">
+        <h2>📖 지난번 실험이 있어요!</h2>
+        <p>지난번에 못 끝낸 실험이 있어. 이어서 할까?</p>
+        <p x-show="resumeInfo" style="font-size:.8em;color:#5b6b8a">
+          단계 <b x-text="resumeInfo?.step_n"></b> 까지 진행했어요.
+        </p>
+        <div style="display:flex;gap:12px;margin-top:14px">
+          <button class="big-ok" @click="doResume()">📖 이어하기</button>
+          <button class="big-ok" style="background:#94a3b8;box-shadow:0 4px 0 #64748b" @click="startFresh()">🆕 새로 시작</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 도움요청 화면 깜빡임 (GPIO 부저·LED 대체) -->
+    <div class="blink-overlay" x-show="blink" x-cloak>🔔 선생님께 알렸어요!</div>
+
+    <!-- 교사 모드 패널 (PIN, 30초 자동복귀) -->
+    <div class="teacher-panel" x-show="teacherMode" @click="resetIdle()" @keydown="resetIdle()" x-cloak>
+      <div class="tp-head">🎓 교사 모드 <button @click="teacherMode=false">학생화면 ▶</button></div>
+      <div class="tp-grid">
+        <div>현재 단계: <b x-text="teacherView.current_step"></b></div>
+        <div>안전수칙: <b x-text="teacherView.safety_ritual_done ? '완료 ✅' : '미완료'"></b></div>
+        <div>막힘 누적: <b x-text="teacherView.stuck_count"></b></div>
+        <div>도움요청: <b x-text="teacherView.help_calls"></b></div>
+        <div>상태: <b x-text="teacherView.status"></b></div>
+        <div>메시지: <b x-text="teacherView.message_count"></b></div>
+      </div>
+      <div class="tp-controls">
+        <button @click="teacherNext()">⏭ 다음 단계</button>
+        <button @click="teacherControl('pause')">⏸ 일시정지</button>
+        <button @click="teacherControl('resume')">▶ 재개</button>
+        <button @click="endSession()">📄 활동지 생성</button>
+      </div>
+      <div class="tp-inject">
+        <input x-model="injectText" @keydown.enter="teacherInject()" placeholder="학생 화면에 보낼 메시지..." />
+        <button @click="teacherInject()">주입</button>
+      </div>
+      <div class="tp-pdf" x-show="pdfUrl">
+        <a :href="pdfUrl" target="_blank">📄 활동지 PDF 열기 / 인쇄</a>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    [x-cloak]{display:none!important;}
+    .modal-bg{position:fixed;inset:0;background:rgba(20,30,60,.55);display:flex;align-items:center;justify-content:center;z-index:50;}
+    .modal{background:#fff;border-radius:24px;padding:30px 34px;max-width:600px;width:90%;font-size:var(--font-bubble);}
+    .modal h2{margin-top:0;}
+    .safety-modal{border:4px solid var(--warn);}
+    .safety-modal .call{color:var(--warn);font-weight:700;}
+    .safety-modal ol li{margin:12px 0;line-height:1.4;}
+    .big-ok{margin-top:16px;width:100%;border:0;border-radius:18px;padding:18px;font-size:1em;font-weight:700;color:#fff;background:var(--accent);box-shadow:0 4px 0 #16a34a;cursor:pointer;}
+    .role-row{display:flex;align-items:center;gap:10px;margin:12px 0;font-size:.8em;}
+    .role-row small{flex:1;color:#5b6b8a;}
+    .role-row input{border:2px solid #cdd9ee;border-radius:12px;padding:8px 12px;width:130px;font-size:1em;}
+    .hint{font-size:.6em;color:#5b6b8a;text-align:center;margin-top:10px;}
+    .blink-overlay{position:fixed;inset:0;background:rgba(245,158,11,.92);color:#fff;display:flex;align-items:center;justify-content:center;font-size:2em;font-weight:800;z-index:60;animation:blink .3s steps(2,start) infinite;}
+    @keyframes blink{to{opacity:.4;}}
+    .teacher-panel{position:fixed;inset:0;background:#0f172a;color:#e2e8f0;padding:28px;z-index:70;font-size:18px;overflow:auto;}
+    .tp-head{font-size:1.6em;font-weight:800;display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
+    .tp-head button{background:#22c55e;color:#fff;border:0;border-radius:12px;padding:10px 18px;font-size:.7em;cursor:pointer;}
+    .tp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;background:#1e293b;border-radius:16px;padding:18px;margin-bottom:18px;}
+    .tp-controls{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px;}
+    .tp-controls button{background:#3b82f6;color:#fff;border:0;border-radius:12px;padding:14px 18px;font-size:.9em;cursor:pointer;}
+    .tp-inject{display:flex;gap:10px;}
+    .tp-inject input{flex:1;border-radius:12px;border:0;padding:12px;font-size:.9em;}
+    .tp-inject button{background:#6366f1;color:#fff;border:0;border-radius:12px;padding:0 22px;cursor:pointer;}
+    .tp-pdf{margin-top:18px;font-size:1.2em;}
+    .tp-pdf a{color:#fbbf24;}
+  </style>
+</body>
+</html>

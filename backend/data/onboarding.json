@@ -1,0 +1,76 @@
+{
+  "id": "onboarding-first-class",
+  "title": "내 보드 친구를 알아보자",
+  "duration_min": 45,
+  "objectives": [
+    "ESP8266 보드 부위 이름을 안다",
+    "점퍼선·USB·빵판을 구분한다",
+    "전원을 안전하게 연결한다"
+  ],
+  "stages": [
+    {
+      "n": 1,
+      "title": "보드 친구 소개",
+      "duration_min": 5,
+      "type": "intro",
+      "llm_script": "안녕! 오늘은 우리 실험 친구를 소개할게. 책상 위에 있는 작은 초록색(또는 검은색) 보드 보이지? 이 친구 이름은 'ESP8266'이야. 우리가 시키는 일을 척척 해주는 작은 컴퓨터란다. 한번 손바닥에 올려놓고 살펴볼래?",
+      "student_action": "보드를 손에 들고 관찰",
+      "checkpoint_question": "USB 구멍은 어디에 있나요?"
+    },
+    {
+      "n": 2,
+      "title": "부위 이름 맞추기",
+      "duration_min": 5,
+      "type": "game",
+      "llm_script": "이제 보드 친구의 몸을 살펴보자! 은색 네모난 USB 구멍, 그 옆에 줄지어 있는 작은 핀(다리)들 보이지? 핀 중에는 전기를 주는 '3V3', 'GND' 같은 글자가 적혀 있어. 빨간 점퍼선은 전기(+)를 주는 길, 검은 점퍼선은 돌아오는 길(-)이라고 약속하자. 자, 퀴즈! 보드에서 '3V3'이라고 적힌 핀을 손가락으로 가리켜 볼래?",
+      "student_action": "보드에서 3V3, GND, USB 위치 가리키기",
+      "checkpoint_question": "3V3 핀은 무슨 색 줄에 연결할까요?",
+      "expected_answer_keywords": ["빨강", "빨간", "빨강색", "빨간색"]
+    },
+    {
+      "n": 3,
+      "title": "전기 길 만들기 (빵판 + - 연결)",
+      "duration_min": 10,
+      "type": "hands_on",
+      "safety_check": ["USB 빠져있나요?"],
+      "image_path": "/assets/onboarding/breadboard-power.svg",
+      "llm_script": "이제 빵판에 전기 길을 만들 거야. 먼저 약속! USB는 아직 꽂지 않아. 빵판 양 옆에 빨간 줄(+)과 파란 줄(-)이 보이지? 빨간 점퍼선 한 개를 들어서, 보드의 3V3과 빵판 빨간 줄을 연결해 보자. 그다음 검은 점퍼선으로 보드의 GND와 빵판 파란 줄을 연결해.",
+      "student_action": "3V3→빨간 줄, GND→파란 줄 연결",
+      "expected_state": "power_rails_connected"
+    },
+    {
+      "n": 4,
+      "title": "DHT11 연결 + USB 꽂기",
+      "duration_min": 15,
+      "type": "hands_on",
+      "safety_check": ["USB 빠져있나요?", "+ - 거꾸로 안 꽂았나요?"],
+      "image_path": "/assets/onboarding/dht11-connect.svg",
+      "llm_script": "좋아! 이제 온도습도 센서(DHT11)를 빵판에 꽂아보자. 센서 다리가 세 개지? VCC는 빨간 줄(+), GND는 파란 줄(-), 그리고 S(신호)는 보드의 D2 핀에 연결해. 다 꽂았으면 + -가 거꾸로 안 됐는지 한 번 더 확인하고, 선생님께 검사받자.",
+      "student_action": "DHT11의 VCC/GND/S 연결, 점검",
+      "expected_state": "first_sensor_connected"
+    },
+    {
+      "n": 5,
+      "title": "AI에게 온도 물어보기",
+      "duration_min": 7,
+      "type": "interaction",
+      "llm_script": "이제 USB 꽂아도 돼! 꽂았으면 나한테 '지금 온도 알려줘'라고 말해봐. 우리 센서가 느낀 교실 온도를 함께 확인해보자. 화면의 그래프도 같이 볼까?",
+      "student_action": "USB 연결 후 AI에게 온도 질문",
+      "checkpoint_question": "지금 교실 온도는 몇 도라고 나왔나요?",
+      "expected_state": "first_data_received"
+    },
+    {
+      "n": 6,
+      "title": "정리·약속",
+      "duration_min": 3,
+      "type": "closing",
+      "llm_script": "오늘 정말 잘했어! 마지막으로 약속 세 가지를 같이 외쳐보자. 첫째, 센서 갈아끼울 땐 USB 먼저 빼기! 둘째, 보드가 뜨거우면 바로 USB 빼고 선생님 부르기! 셋째, 타는 냄새가 나면 즉시 멈추기! 다음 시간엔 더 재미있는 실험을 해보자. 안녕!",
+      "student_action": "점퍼선·센서 정리, 약속 복창"
+    }
+  ],
+  "safety_rules": [
+    "센서 갈아끼울 땐 USB 먼저 빼기",
+    "보드가 뜨거우면 즉시 USB 빼고 선생님 부르기",
+    "타는 냄새 나면 즉시 사용 중지"
+  ]
+}
