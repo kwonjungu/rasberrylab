@@ -119,6 +119,13 @@ async def chat(req: ChatReq):
             latency = int((time.perf_counter() - t0) * 1000)
             text = "".join(full).strip()
             _log(req.session_id, "assistant", text, source="llm", model=MODEL_FAST, latency_ms=latency)
+            # Phase 7: 이상 징후 있으면 교사 검수 큐에 적재(알림만)
+            try:
+                from services.curation import enqueue
+                enqueue(uuid.uuid4().hex[:12], req.session_id, user_text, text,
+                        grade=(session.get("grade") if isinstance(session, dict) else None))
+            except Exception:
+                pass
             yield _sse({"type": "done", "source": "llm", "latency_ms": latency})
         except Exception as exc:  # LLM 실패 시 한국어 폴백
             from services.data_loader import store

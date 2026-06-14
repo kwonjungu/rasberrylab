@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>학급 분석 — Science AI Lab</title>
+  <style>
+    body{font-family:"Noto Sans KR",system-ui,sans-serif;background:#f3f7ff;color:#1f2a44;margin:0;padding:20px;}
+    h1{font-size:24px;} .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;}
+    .stat{background:#fff;border:2px solid #d6e4ff;border-radius:16px;padding:18px;}
+    .stat .v{font-size:32px;font-weight:800;color:#2563eb;} .stat .l{color:#5b6b8a;}
+    .sec{margin-top:24px;} li{margin:6px 0;}
+  </style>
+  <script defer src="/lib/alpine.min.js"></script>
+</head>
+<body x-data="an()" x-init="load()">
+  <h1>📊 학급 분석 대시보드</h1>
+  <div class="grid">
+    <div class="stat"><div class="v" x-text="s.sessions"></div><div class="l">수업 횟수</div></div>
+    <div class="stat"><div class="v" x-text="(s.completion_rate||0)+'%'"></div><div class="l">완주율</div></div>
+    <div class="stat"><div class="v" x-text="s.help_calls"></div><div class="l">도움요청</div></div>
+    <div class="stat"><div class="v" x-text="(s.scripted_pct||0)+'%'"></div><div class="l">스크립트 응답</div></div>
+    <div class="stat"><div class="v" x-text="(s.llm_pct||0)+'%'"></div><div class="l">LLM 응답</div></div>
+    <div class="stat"><div class="v" x-text="s.curation_items"></div><div class="l">검수 항목</div></div>
+  </div>
+  <div class="sec">
+    <h2>인기 실험</h2>
+    <ul><template x-for="e in pop" :key="e.experiment_id"><li x-text="e.experiment_id + ' — ' + e.n + '회'"></li></template></ul>
+  </div>
+  <script>
+  function an(){return{ s:{},pop:[],
+    async load(){ this.s=await fetch("/api/analytics/summary").then(x=>x.json()); this.pop=(await fetch("/api/analytics/popular_experiments").then(x=>x.json())).experiments||[]; }
+  }}
+  </script>
+</body>
+</html>

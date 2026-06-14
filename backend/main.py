@@ -15,8 +15,10 @@ from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from routers import admin as admin_router
+from routers import analytics as analytics_router
 from routers import chat as chat_router
 from routers import checkpoint as checkpoint_router
+from routers import curation as curation_router
 from routers import data as data_router
 from routers import flow as flow_router
 from routers import replay as replay_router
@@ -63,6 +65,8 @@ app.include_router(flow_router.router)
 app.include_router(checkpoint_router.router)
 app.include_router(replay_router.router)
 app.include_router(admin_router.router)
+app.include_router(curation_router.router)
+app.include_router(analytics_router.router)
 
 # 프론트(로컬 정적 파일)에서의 호출 허용
 app.add_middleware(

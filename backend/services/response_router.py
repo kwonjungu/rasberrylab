@@ -110,7 +110,8 @@ class ResponseRouter:
         if intent == "repeat":
             msg = replies.get("repeat") or step.get("instruction_student") or _dialogue("errors", "unknown")
             return self._scripted(msg, session, "intent.repeat")
-        # question → LLM
+        # question → LLM (RAG가 참고하도록 질문을 세션에 주입)
+        session = {**session, "_last_question": text}
         return {"source": "llm", "content": None, "script_id": None, "system_prompt": build_system_prompt(session)}
 
     def _danger_message(self, text: str) -> str:

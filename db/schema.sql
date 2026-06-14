@@ -104,7 +104,57 @@ CREATE TABLE IF NOT EXISTS flow_events (
   ts         TEXT
 );
 
+-- Phase 7: 벡터 임베딩(BLOB) + 메타 (numpy 코사인 검색)
+CREATE TABLE IF NOT EXISTS vector_embeddings (
+  id          INTEGER PRIMARY KEY AUTOINCREMENT,
+  source_type TEXT,      -- qa|question
+  source_id   TEXT,      -- message id 등
+  grade       INTEGER,
+  unit_id     TEXT,
+  experiment_id TEXT,
+  content     TEXT,      -- 임베딩 대상 텍스트(익명화됨)
+  answer      TEXT,      -- 함께 보관할 답변(있으면)
+  embedding   BLOB,      -- float32 768차원
+  curated_status TEXT DEFAULT 'pending',  -- pending|approved|rejected
+  created_at  TEXT
+);
+
+-- Phase 7: 교사 검수 큐
+CREATE TABLE IF NOT EXISTS curation_queue (
+  id          TEXT PRIMARY KEY,
+  message_id  TEXT,
+  session_id  TEXT,
+  question    TEXT,
+  answer      TEXT,
+  grade       INTEGER,
+  reason      TEXT,      -- 자동 분류 사유
+  status      TEXT DEFAULT 'pending',  -- pending|approved|rejected|edited
+  edited_answer TEXT,
+  created_at  TEXT
+);
+
+-- Phase 7: 시스템 프롬프트 버전(롤백 가능)
+CREATE TABLE IF NOT EXISTS prompt_versions (
+  id         INTEGER PRIMARY KEY AUTOINCREMENT,
+  version    INTEGER,
+  addon      TEXT,       -- prompt_builder에 병합되는 학습 내용
+  active      INTEGER DEFAULT 0,
+  approved_n  INTEGER,
+  rejected_n  INTEGER,
+  created_at  TEXT
+);
+
+-- Phase 7: 환각/오답 탐지 로그
+CREATE TABLE IF NOT EXISTS anomaly_log (
+  id         INTEGER PRIMARY KEY AUTOINCREMENT,
+  message_id TEXT,
+  reason     TEXT,
+  detail     TEXT,
+  ts         TEXT
+);
+
 CREATE INDEX IF NOT EXISTS idx_messages_session ON messages(session_id);
 CREATE INDEX IF NOT EXISTS idx_checkpoints_session ON checkpoints(session_id);
+CREATE INDEX IF NOT EXISTS idx_curation_status ON curation_queue(status);
 CREATE INDEX IF NOT EXISTS idx_messages_source  ON messages(response_source);
 CREATE INDEX IF NOT EXISTS idx_readings_session ON sensor_readings(session_id);

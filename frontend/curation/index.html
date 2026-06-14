@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>교사 검수 — Science AI Lab</title>
+  <style>
+    body{font-family:"Noto Sans KR",system-ui,sans-serif;background:#f3f7ff;color:#1f2a44;margin:0;padding:20px;}
+    h1{font-size:24px;} .pin{margin:20px 0;}
+    input{padding:10px;border:2px solid #cdd9ee;border-radius:10px;font-size:16px;}
+    .card{background:#fff;border:2px solid #d6e4ff;border-radius:16px;padding:16px;margin:12px 0;}
+    .q{color:#2563eb;font-weight:700;} .a{margin:8px 0;} .reason{color:#b42318;font-size:14px;}
+    button{border:0;border-radius:10px;padding:10px 16px;margin-right:8px;font-weight:700;cursor:pointer;color:#fff;}
+    .ok{background:#22c55e;} .no{background:#ef4444;} .edit{background:#6366f1;} .skip{background:#94a3b8;}
+    .bar{display:flex;gap:10px;align-items:center;margin-bottom:16px;}
+  </style>
+  <script defer src="/lib/alpine.min.js"></script>
+</head>
+<body x-data="cur()">
+  <h1>🧑‍🏫 교사 검수 큐</h1>
+  <div class="pin" x-show="!authed">
+    PIN: <input type="password" x-model="pin" @keydown.enter="login()" /> <button class="ok" @click="login()">확인</button>
+  </div>
+  <div x-show="authed">
+    <div class="bar">
+      <button class="edit" @click="evolve()">⚙️ 시스템 프롬프트 진화 실행</button>
+      <span x-text="evolveMsg" style="color:#16a34a"></span>
+    </div>
+    <template x-for="it in items" :key="it.id">
+      <div class="card">
+        <div class="q" x-text="'Q: ' + (it.question||'(질문 없음)')"></div>
+        <div class="a" x-text="'A: ' + it.answer"></div>
+        <div class="reason" x-text="'⚠ ' + it.reason"></div>
+        <div style="margin-top:10px">
+          <button class="ok" @click="act(it.id,'approve')">✓ 좋은 답변</button>
+          <button class="no" @click="act(it.id,'reject')">✗ 잘못됨</button>
+          <button class="edit" @click="doEdit(it.id)">✏ 수정</button>
+          <button class="skip" @click="items=items.filter(x=>x.id!==it.id)">건너뛰기</button>
+        </div>
+      </div>
+    </template>
+    <p x-show="authed && items.length===0">검수할 항목이 없어요 🎉</p>
+  </div>
+  <script>
+  function cur(){return{
+    pin:"",authed:false,items:[],evolveMsg:"",
+    async login(){ const r=await fetch("/api/teacher/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({pin:this.pin})}).then(x=>x.json()); if(r.ok){this.authed=true;this.load();}else alert("PIN이 달라요");},
+    async load(){ this.items=(await fetch("/api/curation/queue?status=pending").then(x=>x.json())).items||[]; },
+    async act(id,action){ await fetch(`/api/curation/${id}/${action}`,{method:"POST"}); this.items=this.items.filter(x=>x.id!==id); },
+    async doEdit(id){ const t=prompt("수정할 답변을 입력하세요"); if(!t)return; await fetch(`/api/curation/${id}/edit`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({edited_answer:t})}); this.items=this.items.filter(x=>x.id!==id); },
+    async evolve(){ const r=await fetch("/api/prompt_versions/evolve",{method:"POST"}).then(x=>x.json()); this.evolveMsg=r.ok?`v${r.version} 학습 완료 (승인 ${r.approved_n}, 거부 ${r.rejected_n})`:"큐레이션 데이터 부족"; }
+  }}
+  </script>
+</body>
+</html>

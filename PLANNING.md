@@ -51,7 +51,13 @@
   - admin/diagnose(Ollama·MQTT·디스크·메모리·온도·경고) 검증 OK
   - 배포: install/update/backup/restore/clone/uninstall.sh + first_boot.py + INSTALL.md
   - ⚠️ 적용은 콘솔(sudo/재부팅): bash scripts/install.sh → first_boot.py → reboot
-- [ ] Phase 7: 재귀 학습 (세션 저장 → 벡터 인덱싱 → 교사 큐레이션 → 프롬프트 진화)
+- [x] Phase 7: 재귀 학습
+  - embeddings(nomic-embed-text 768d) + vector_store(numpy 코사인, sqlite-vss 대체 — aarch64 안정) + rag(top3, approved×2 가중)
+  - anomaly_detector(위험/회피/미보유/길이) + curation(큐 적재·승인·거부·수정→인덱싱) + prompt_evolver(버전·롤백·active addon)
+  - prompt_builder에 진화 addon + RAG 컨텍스트 주입, chat.py LLM답변 자동 큐 적재
+  - routers/curation·analytics + /curation·/analytics 페이지(PIN) + /api/index/rebuild 백필
+  - anonymizer(별명 제거). 검증: 임베딩768·백필·RAG히트·환각6케이스·진화v1 OK. 엔드포인트 50개
+  - ⚠️ 미적용(콘솔/cron): 자정 인덱싱·주1회 진화·30일 압축 cron 등록은 운영 시
 
 ## Phase 2 반영 예정 실험 (사용자 제공)
 | 학년 | 단원 | 실험 | 활용 센서/액추에이터 |

@@ -47,4 +47,20 @@ def build_system_prompt(session: dict) -> str:
         if exp.llm_system_prompt_addon:
             lines.append(f"[이 실험 특별 지침] {exp.llm_system_prompt_addon}")
 
+    # Phase 7: 진화된 프롬프트(교사 큐레이션 학습) + RAG 과거 사례
+    try:
+        from . import prompt_evolver, rag
+        addon = prompt_evolver.active_addon()
+        if addon:
+            lines.append("")
+            lines.append(addon)
+        q = session.get("_last_question")
+        if q:
+            ctx = rag.context_block(q, grade=grade, unit_id=session.get("unit_id"))
+            if ctx:
+                lines.append("")
+                lines.append(ctx)
+    except Exception:
+        pass
+
     return "\n".join(lines)
