@@ -85,6 +85,19 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 
 ---
 
+## 📖 구현 원리
+
+**어떻게·어떤 방식으로 동작하는지**는 [`ARCHITECTURE.md`](ARCHITECTURE.md)에 코드 흐름 중심으로 자세히 정리했습니다:
+- 요청 한 번이 흐르는 길 (응답 라우터 = 시스템의 심장)
+- 스크립트/룰/LLM 분기, 의도 분류, 센서 룰 엔진
+- 실시간 MQTT 파이프라인 (스레드↔asyncio 경계 처리)
+- 노드 시각화, 차시 이어하기/리플레이
+- RAG·교사 큐레이션·프롬프트 진화
+- 자동 기동·자가치유·학생 보호
+- 기술 선택 이유 요약
+
+진행 기록은 [`PLANNING.md`](PLANNING.md), 설치·운영은 [`INSTALL.md`](INSTALL.md) 참고.
+
 ## 라이선스 / 기여
 
 경기교육청 초등 과학 교육용 프로젝트. 교실 환경(인터넷 없음·초등학생·안전)을 1순위로 설계합니다.
