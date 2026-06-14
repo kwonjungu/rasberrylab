@@ -1,0 +1,11 @@
+[Unit]
+Description=Ollama Model Warmup (gemma3:1b 첫 응답 빠르게)
+After=ollama.service science-ai-backend.service
+Wants=science-ai-backend.service
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash -c 'sleep 30 && curl -s http://localhost:11434/api/generate -d "{\"model\":\"gemma3:1b\",\"prompt\":\"안녕\",\"stream\":false}" >/dev/null'
+
+[Install]
+WantedBy=multi-user.target

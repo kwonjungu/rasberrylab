@@ -1,0 +1,12 @@
+[Unit]
+Description=Science AI WiFi Access Point (hostapd + dnsmasq wrapper)
+After=network.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/bin/bash -c 'systemctl start hostapd && systemctl start dnsmasq'
+ExecStop=/bin/bash -c 'systemctl stop hostapd && systemctl stop dnsmasq'
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,13 @@
+[Unit]
+Description=Science AI Watchdog (5분 헬스체크 자가치유)
+After=science-ai-backend.service
+
+[Service]
+Type=simple
+User=kwon
+ExecStart=/mnt/nvme/projects/science-ai/scripts/watchdog.sh
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

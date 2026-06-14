@@ -305,6 +305,7 @@ function labApp() {
         return;
       }
       this.teacherMode = true;
+      window.studentMode = false; // 교사: 브라우저 기능 복원
       await this.refreshTeacher();
       this.resetIdle();
     },
@@ -313,8 +314,11 @@ function labApp() {
     },
     resetIdle() {
       if (this._idle) clearTimeout(this._idle);
-      // 30초 무입력 → 자동 학생 모드 복귀
-      this._idle = setTimeout(() => (this.teacherMode = false), 30000);
+      // 30초 무입력 → 자동 학생 모드 복귀(보호 재활성)
+      this._idle = setTimeout(() => {
+        this.teacherMode = false;
+        window.studentMode = true;
+      }, 30000);
     },
     async teacherNext() {
       await fetch(`/api/session/${this.sessionId}/step/next`, { method: "POST" });

@@ -14,6 +14,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 
+from routers import admin as admin_router
 from routers import chat as chat_router
 from routers import checkpoint as checkpoint_router
 from routers import data as data_router
@@ -61,6 +62,7 @@ app.include_router(sensors_router.router)
 app.include_router(flow_router.router)
 app.include_router(checkpoint_router.router)
 app.include_router(replay_router.router)
+app.include_router(admin_router.router)
 
 # 프론트(로컬 정적 파일)에서의 호출 허용
 app.add_middleware(

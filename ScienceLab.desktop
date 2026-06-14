@@ -1,0 +1,14 @@
+[Desktop Entry]
+Version=1.0
+Name=Science Lab
+Name[ko]=과학 실험실
+Comment=AI와 함께하는 과학 실험
+Comment[ko]=AI와 함께하는 과학 실험
+Exec=/mnt/nvme/projects/science-ai/launcher.sh
+Icon=/mnt/nvme/projects/science-ai/assets/icon.png
+Terminal=false
+Type=Application
+Categories=Education;Science;
+StartupNotify=true
+StartupWMClass=ScienceLab
+Keywords=과학;실험;AI;

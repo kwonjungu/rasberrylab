@@ -45,7 +45,12 @@
   - replay(messages+readings 병합 타임라인) + /api/replay/{sessions,stream} SSE 배속
   - flow.html(자체 SVG+Alpine, 빔프로젝터 36px+, 데이터입자 애니메이션) + flow-fullscreen.html
   - 프론트: 이어하기 모달, ESP 위젯 sparkline. 자체 SVG 사용(React Flow/vis.js 미사용 — Pi 경량)
-- [ ] Phase 6: 데스크톱 통합 (launcher.sh, .desktop, systemd user service)
+- [x] Phase 6: 데스크톱 통합 + 자동기동 + 학생 보호 (코드 완료, 적용은 콘솔)
+  - systemd 4종(backend/warmup/watchdog/ap) + launcher.sh(키오스크) + watchdog.sh(5분 자가치유)
+  - ScienceLab.desktop + assets/icon.png + student_lock.js(F11/F12/우클릭/새로고침 차단, 교사PIN 해제·30초 자동복귀)
+  - admin/diagnose(Ollama·MQTT·디스크·메모리·온도·경고) 검증 OK
+  - 배포: install/update/backup/restore/clone/uninstall.sh + first_boot.py + INSTALL.md
+  - ⚠️ 적용은 콘솔(sudo/재부팅): bash scripts/install.sh → first_boot.py → reboot
 - [ ] Phase 7: 재귀 학습 (세션 저장 → 벡터 인덱싱 → 교사 큐레이션 → 프롬프트 진화)
 
 ## Phase 2 반영 예정 실험 (사용자 제공)

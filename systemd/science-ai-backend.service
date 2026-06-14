@@ -1,0 +1,19 @@
+[Unit]
+Description=Science AI Lab Backend (FastAPI)
+After=network.target ollama.service mosquitto.service mnt-nvme.mount
+Wants=ollama.service mosquitto.service
+RequiresMountsFor=/mnt/nvme
+
+[Service]
+Type=simple
+User=kwon
+Group=kwon
+WorkingDirectory=/mnt/nvme/projects/science-ai/backend
+Environment="OLLAMA_URL=http://localhost:11434"
+Environment="MQTT_HOST=127.0.0.1"
+ExecStart=/mnt/nvme/projects/science-ai/backend/.venv/bin/uvicorn main:app --host 127.0.0.1 --port 8000
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
