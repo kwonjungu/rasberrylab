@@ -25,6 +25,11 @@ sudo systemctl enable mosquitto ollama 2>/dev/null || true
 sudo systemctl enable science-ai-backend science-ai-warmup science-ai-watchdog
 sudo systemctl restart science-ai-backend
 
+# 4-1. 워치독/런처가 비밀번호 없이 백엔드를 재시작할 수 있게 (제한적 NOPASSWD)
+SUDOERS=/etc/sudoers.d/science-ai
+echo "$USER ALL=(ALL) NOPASSWD: /usr/bin/systemctl restart science-ai-backend, /usr/bin/systemctl start science-ai-backend, /usr/bin/systemctl restart science-ai-ap, /usr/bin/systemctl start hostapd, /usr/bin/systemctl start dnsmasq" | sudo tee "$SUDOERS" >/dev/null
+sudo chmod 440 "$SUDOERS"
+
 # 5. 바탕화면 아이콘
 DESK="$HOME/Desktop"; mkdir -p "$DESK"
 cp "$ROOT/ScienceLab.desktop" "$DESK/"
