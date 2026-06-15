@@ -143,11 +143,35 @@
           <p x-text="briefing?.hypothesis_prompt"></p>
         </div>
 
-        <div class="bf-block" x-show="briefing?.required_sensors?.length">
-          <div class="bf-h">🧰 준비물 / 센서</div>
-          <div class="bf-sensors">
-            <template x-for="s in (briefing?.required_sensors||[])" :key="s"><span class="pill" x-text="'📟 ' + s"></span></template>
-            <template x-for="m in (briefing?.extra_materials||[])" :key="m"><span class="pill ghost" x-text="m"></span></template>
+        <div class="bf-block" x-show="briefing?.required_sensors?.length || briefing?.optional_sensors?.length">
+          <div class="bf-h">🧰 준비물 — 키트에서 이 센서를 찾으세요</div>
+          <div class="kit-cards">
+            <template x-for="s in (briefing?.required_sensors||[])" :key="s">
+              <div class="kit-card req">
+                <div class="kit-thumb">
+                  <template x-if="kit[s] && kit[s].photo"><img :src="kit[s].photo" :alt="kit[s].label" /></template>
+                  <template x-if="!(kit[s] && kit[s].photo)"><span class="kit-noimg">📟</span></template>
+                  <span class="kit-no" x-show="kit[s] && kit[s].kit_no" x-text="'No.' + (kit[s]?.kit_no)"></span>
+                </div>
+                <div class="kit-name" x-text="(kit[s]?.label) || s"></div>
+                <div class="kit-tag req">꼭 필요</div>
+              </div>
+            </template>
+            <template x-for="s in (briefing?.optional_sensors||[])" :key="s">
+              <div class="kit-card opt">
+                <div class="kit-thumb">
+                  <template x-if="kit[s] && kit[s].photo"><img :src="kit[s].photo" :alt="kit[s].label" /></template>
+                  <template x-if="!(kit[s] && kit[s].photo)"><span class="kit-noimg">📟</span></template>
+                  <span class="kit-no" x-show="kit[s] && kit[s].kit_no" x-text="'No.' + (kit[s]?.kit_no)"></span>
+                </div>
+                <div class="kit-name" x-text="(kit[s]?.label) || s"></div>
+                <div class="kit-tag opt">있으면 좋아요</div>
+              </div>
+            </template>
+          </div>
+          <div class="bf-extra" x-show="briefing?.extra_materials?.length">
+            <b>그 밖에 필요한 것:</b>
+            <span x-text="(briefing?.extra_materials||[]).join(', ')"></span>
           </div>
         </div>
 

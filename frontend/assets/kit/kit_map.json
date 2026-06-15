@@ -1,0 +1,177 @@
+{
+  "joystick": {
+    "kit_no": 1,
+    "label": "조이스틱 모듈",
+    "photo": "/assets/kit/joystick.png"
+  },
+  "rgb-led": {
+    "kit_no": 3,
+    "label": "3색(RGB) LED 모듈",
+    "photo": "/assets/kit/rgb-led.png"
+  },
+  "light-cup": {
+    "kit_no": 5,
+    "label": "매직 라이트 컵 모듈",
+    "photo": "/assets/kit/light-cup.png"
+  },
+  "smd-rgb": {
+    "kit_no": 9,
+    "label": "SMD RGB 모듈",
+    "photo": "/assets/kit/smd-rgb.png"
+  },
+  "seven-color-flash": {
+    "kit_no": 10,
+    "label": "7색 자동점멸 LED 모듈",
+    "photo": "/assets/kit/seven-color-flash.png"
+  },
+  "tilt-mercury": {
+    "kit_no": 11,
+    "label": "수은 기울기 스위치 모듈",
+    "photo": "/assets/kit/tilt-mercury.png"
+  },
+  "photoresistor": {
+    "kit_no": 12,
+    "label": "조도(빛) 센서 모듈",
+    "photo": "/assets/kit/photoresistor.png"
+  },
+  "big-sound": {
+    "kit_no": 13,
+    "label": "고감도 소리 센서 모듈",
+    "photo": "/assets/kit/big-sound.png"
+  },
+  "two-color-led": {
+    "kit_no": 15,
+    "label": "2색(R/G) LED 모듈",
+    "photo": "/assets/kit/two-color-led.png"
+  },
+  "laser": {
+    "kit_no": 16,
+    "label": "레이저 발광 모듈",
+    "photo": "/assets/kit/laser.png"
+  },
+  "analog-temp": {
+    "kit_no": 18,
+    "label": "아날로그 조도/온도 모듈",
+    "photo": "/assets/kit/analog-temp.png"
+  },
+  "small-sound": {
+    "kit_no": 19,
+    "label": "소형 소리 센서 모듈",
+    "photo": "/assets/kit/small-sound.png"
+  },
+  "digital-temp": {
+    "kit_no": 20,
+    "label": "디지털 온도 센서 모듈",
+    "photo": "/assets/kit/digital-temp.png"
+  },
+  "two-color-led-small": {
+    "kit_no": 21,
+    "label": "2색 소형 LED 모듈",
+    "photo": "/assets/kit/two-color-led-small.png"
+  },
+  "button": {
+    "kit_no": 22,
+    "label": "버튼 스위치 모듈",
+    "photo": "/assets/kit/button.png"
+  },
+  "ir-emission": {
+    "kit_no": 24,
+    "label": "적외선 발광 센서 모듈",
+    "photo": "/assets/kit/ir-emission.png"
+  },
+  "tracking": {
+    "kit_no": 25,
+    "label": "라인 트래킹 모듈",
+    "photo": "/assets/kit/tracking.png"
+  },
+  "active-buzzer": {
+    "kit_no": 26,
+    "label": "능동 부저 모듈",
+    "photo": "/assets/kit/active-buzzer.png"
+  },
+  "reed-switch": {
+    "kit_no": 27,
+    "label": "리드 스위치 모듈",
+    "photo": "/assets/kit/reed-switch.png"
+  },
+  "shock": {
+    "kit_no": 28,
+    "label": "충격(진동) 센서 모듈",
+    "photo": "/assets/kit/shock.png"
+  },
+  "dht11": {
+    "kit_no": 29,
+    "label": "온도·습도 센서 모듈(DHT11)",
+    "photo": "/assets/kit/dht11.png"
+  },
+  "flame": {
+    "kit_no": 30,
+    "label": "화염 감지 센서 모듈",
+    "photo": "/assets/kit/flame.png"
+  },
+  "avoid-ir": {
+    "kit_no": 31,
+    "label": "장애물 감지 센서 모듈",
+    "photo": "/assets/kit/avoid-ir.png"
+  },
+  "passive-buzzer": {
+    "kit_no": 32,
+    "label": "수동 부저 모듈",
+    "photo": "/assets/kit/passive-buzzer.png"
+  },
+  "mini-reed": {
+    "kit_no": 33,
+    "label": "미니 리드 스위치 모듈",
+    "photo": "/assets/kit/mini-reed.png"
+  },
+  "rotary-encoder": {
+    "kit_no": 34,
+    "label": "로터리 엔코더 모듈",
+    "photo": "/assets/kit/rotary-encoder.png"
+  },
+  "analog-hall": {
+    "kit_no": 35,
+    "label": "아날로그 홀(자기) 센서 모듈",
+    "photo": "/assets/kit/analog-hall.png"
+  },
+  "tap": {
+    "kit_no": 36,
+    "label": "두드림(탭) 센서 모듈",
+    "photo": "/assets/kit/tap.png"
+  },
+  "light-blocking": {
+    "kit_no": 37,
+    "label": "광 차단(포토 인터럽터) 모듈",
+    "photo": "/assets/kit/light-blocking.png"
+  },
+  "hc-sr04": {
+    "kit_no": null,
+    "label": "초음파 거리 센서(HC-SR04) — 별도",
+    "photo": null
+  },
+  "linear-hall": {
+    "kit_no": null,
+    "label": "선형 홀 센서(KY-024) — 별도",
+    "photo": null
+  },
+  "heartbeat": {
+    "kit_no": null,
+    "label": "심박 센서 — 별도",
+    "photo": null
+  },
+  "soil-moisture": {
+    "kit_no": null,
+    "label": "토양 수분 센서 — 별도",
+    "photo": null
+  },
+  "relay": {
+    "kit_no": null,
+    "label": "릴레이 모듈 — 별도",
+    "photo": null
+  },
+  "dc-motor": {
+    "kit_no": null,
+    "label": "DC 모터 — 별도",
+    "photo": null
+  }
+}

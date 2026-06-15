@@ -47,6 +47,7 @@ function labApp() {
     experiments: [],
     gradeFilter: "all", // all | 3 | 4 | 5 | 6 | 0
     briefing: null,     // 미션 브리핑에 띄울 실험 객체
+    kit: {},            // sensor_id → {kit_no, label, photo} (실제 키트 사진 매핑)
 
     // ---- 세션 상태 ----
     sessionId: null,
@@ -129,6 +130,8 @@ function labApp() {
 
     // ================= 탐험 지도 =================
     async loadMap() {
+      // 실제 센서 키트 사진 매핑(준비물 가이드용)
+      this.kit = await fetch("/assets/kit/kit_map.json").then((x) => x.json()).catch(() => ({}));
       const r = await fetch("/api/data/experiments").then((x) => x.json()).catch(() => ({}));
       const items = r.experiments || [];
       // 학년 → 난이도 순으로 정렬해 길 위에 자연스럽게 배치
