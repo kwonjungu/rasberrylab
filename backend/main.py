@@ -127,6 +127,34 @@ async def ollama_test(prompt: str = "안녕"):
         )
 
 
+@app.post("/api/helpbot")
+async def helpbot(payload: dict):
+    """우하단 안내 챗봇 하네스 — 과학/앱사용법 한정.
+    프런트의 하드코딩 FAQ가 못 맞춘 질문만 여기로 온다. Ollama가 있으면 스코프
+    시스템 프롬프트로 짧게 답하고, 없으면 503 으로 우아하게 실패(프런트가 안내 처리)."""
+    text = (payload.get("text") or "").strip()
+    system = payload.get("system") or (
+        "너는 초등 과학 실험 앱의 안내 도우미 '라비'다. 이 앱의 사용법과 초등 과학 개념에 "
+        "대해서만 한국어로 2~3문장으로 쉽고 다정하게 답하고, 그 외 주제는 정중히 거절한다."
+    )
+    if not text:
+        return JSONResponse(status_code=400, content={"error": "질문이 비어 있어요."})
+    prompt = f"{system}\n\n학생 질문: {text}\n라비의 답변:"
+    try:
+        async with httpx.AsyncClient(timeout=60) as client:
+            resp = await client.post(
+                f"{OLLAMA_URL}/api/generate",
+                json={"model": DEFAULT_MODEL, "prompt": prompt, "stream": False,
+                      "options": {"temperature": 0.3, "num_predict": 160}},
+            )
+            resp.raise_for_status()
+            data = resp.json()
+        return {"reply": data.get("response", "").strip(), "source": "ollama"}
+    except Exception as exc:
+        # Ollama 미연결 — 프런트가 FAQ 안내로 대체한다.
+        return JSONResponse(status_code=503, content={"error": "ollama_unavailable", "detail": str(exc)})
+
+
 # 프론트엔드(학생 화면) 정적 서빙 — 반드시 API 라우터 등록 이후 마지막에 마운트
 _FRONTEND = Path(__file__).resolve().parent.parent / "frontend"
 app.mount("/", StaticFiles(directory=str(_FRONTEND), html=True), name="frontend")

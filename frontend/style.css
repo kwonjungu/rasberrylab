@@ -424,3 +424,82 @@ button:disabled { opacity: .5; cursor: not-allowed; filter: grayscale(.25); tran
   background: var(--accent); box-shadow: 0 5px 0 #16a34a; }
 .quick button.helper { background: #eef2f9; color: #33415c; box-shadow: 0 4px 0 #cdd9ee; font-size: .95em; }
 .quick button.helper:hover { filter: none; background: #e4ebf6; }
+
+/* ===================================================================
+   채팅 말풍선 — 더 귀엽게 (라비 꼬리 + 보드라운 톤 + 등장 애니메이션)
+   =================================================================== */
+.mission-card .bubble {
+  position: relative; background: #fff; border: 3px solid #e3ecfb; border-radius: 26px;
+  animation: bubbleIn .28s cubic-bezier(.2,1.3,.35,1);
+}
+/* 삽화/라비에서 말풍선으로 이어지는 꼬리 */
+.mission-card .bubble::before {
+  content: ""; position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+  border: 11px solid transparent; border-bottom-color: #e3ecfb;
+}
+.mission-card .bubble::after {
+  content: ""; position: absolute; top: -9px; left: 50%; transform: translateX(-50%);
+  border: 9px solid transparent; border-bottom-color: #fff;
+}
+@keyframes bubbleIn { from { transform: translateY(8px) scale(.97); opacity: 0; } to { transform: none; opacity: 1; } }
+/* 생각 중 점 애니메이션 느낌 */
+.bubble.thinking { color: #7b8aa6; }
+.mc-greet img { filter: drop-shadow(0 6px 6px rgba(80,120,200,.18)); }
+
+/* ===================================================================
+   우하단 안내 챗봇 "라비 도우미"
+   =================================================================== */
+.helpbot { position: fixed; right: 22px; bottom: 22px; z-index: 75; }
+
+/* 플로팅 버튼 */
+.hb-fab { position: relative; width: 72px; height: 72px; border: 0; border-radius: 50%;
+  background: linear-gradient(135deg, #5aa0ff, #2f6fe0); cursor: pointer;
+  box-shadow: 0 8px 20px rgba(47,111,224,.45); animation: bob 3.2s ease-in-out infinite; }
+.hb-fab img { width: 54px; height: 58px; pointer-events: none; }
+.hb-fab.open { animation: none; filter: brightness(.96); }
+.hb-fab:active { transform: scale(.94); }
+.hb-fab-badge { position: absolute; top: -2px; right: -2px; width: 26px; height: 26px; border-radius: 50%;
+  background: #f59e0b; color: #fff; font-weight: 900; display: flex; align-items: center; justify-content: center;
+  font-size: .85em; box-shadow: 0 2px 0 #d97706; border: 2px solid #fff; }
+
+/* 패널 */
+.hb-panel { position: absolute; right: 0; bottom: 86px; width: 340px; max-width: 86vw; height: 480px; max-height: 72vh;
+  background: #fff; border-radius: 24px; display: flex; flex-direction: column; overflow: hidden;
+  box-shadow: 0 24px 60px rgba(20,40,90,.30); border: 2px solid #e3ecfb; }
+.hb-head { display: flex; align-items: center; gap: 10px; padding: 12px 14px;
+  background: linear-gradient(135deg, #5aa0ff, #2f6fe0); color: #fff; }
+.hb-head img { width: 40px; height: 44px; }
+.hb-head-txt { display: flex; flex-direction: column; line-height: 1.2; }
+.hb-head-txt b { font-size: 1.05em; }
+.hb-head-txt small { font-size: .66em; opacity: .9; }
+.hb-close { margin-left: auto; background: rgba(255,255,255,.22); color: #fff; border: 0;
+  width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: .9em; }
+
+.hb-body { flex: 1; overflow-y: auto; padding: 14px; background: #f3f7ff; display: flex; flex-direction: column; gap: 10px; }
+.hb-msg { display: flex; align-items: flex-end; gap: 6px; max-width: 92%; }
+.hb-msg.me { align-self: flex-end; flex-direction: row-reverse; }
+.hb-av { font-size: 1.3em; flex: none; }
+.hb-bubble { padding: 10px 14px; border-radius: 18px; font-size: .82em; line-height: 1.5;
+  box-shadow: 0 2px 6px rgba(50,90,170,.08); }
+.hb-msg.bot .hb-bubble { background: #fff; color: #1f2a44; border-bottom-left-radius: 6px; }
+.hb-msg.me .hb-bubble { background: var(--primary); color: #fff; border-bottom-right-radius: 6px; }
+
+.hb-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+.hb-chips button { border: 2px solid #cdddf7; background: #fff; color: #2f6fe0; border-radius: 999px;
+  padding: 7px 13px; font-size: .74em; font-weight: 700; cursor: pointer; }
+.hb-chips button:hover { background: #eaf2ff; }
+.hb-chips button:active { transform: translateY(1px); }
+
+.hb-input { display: flex; gap: 8px; padding: 10px; background: #fff; border-top: 1px solid #e3ecfb; }
+.hb-input input { flex: 1; border: 2px solid #cdd9ee; border-radius: 14px; padding: 10px 14px; font-size: .85em; }
+.hb-input input:focus { outline: 0; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59,130,246,.16); }
+.hb-input button { border: 0; background: var(--primary-dark); color: #fff; border-radius: 14px;
+  width: 46px; font-size: 1em; font-weight: 800; cursor: pointer; box-shadow: 0 3px 0 #1e3a8a; }
+.hb-input button:active { transform: translateY(2px); box-shadow: none; }
+
+@media (max-width: 560px) {
+  .helpbot { right: 14px; bottom: 14px; }
+  .hb-fab { width: 60px; height: 60px; }
+  .hb-fab img { width: 44px; height: 48px; }
+  .hb-panel { bottom: 74px; }
+}

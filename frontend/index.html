@@ -10,6 +10,7 @@
   <script src="/chat.js"></script>
   <script src="/panel.js"></script>
   <script src="/story.js"></script>
+  <script src="/helpbot.js"></script>
   <script src="/app.js"></script>
   <!-- Alpine 은 컴포넌트 정의 이후 마지막에 로드 -->
   <script defer src="/lib/alpine.min.js"></script>
@@ -369,5 +370,47 @@
     .tp-pdf{margin-top:18px;font-size:1.2em;}
     .tp-pdf a{color:#fbbf24;}
   </style>
+
+  <!-- ===================== 우하단 안내 챗봇 "라비 도우미" ===================== -->
+  <div class="helpbot" x-data="helpBot()" x-cloak>
+    <!-- 플로팅 버튼 -->
+    <button class="hb-fab" @click="toggle()" :class="{open: open}" title="라비 도우미">
+      <img src="/assets/mascot/labi.svg" alt="라비" />
+      <span class="hb-fab-badge" x-show="!open">?</span>
+    </button>
+
+    <!-- 챗 패널 -->
+    <div class="hb-panel" x-show="open" x-transition.origin.bottom.right x-cloak>
+      <div class="hb-head">
+        <img src="/assets/mascot/labi.svg" alt="라비" />
+        <div class="hb-head-txt">
+          <b>라비 도우미</b>
+          <small>과학·앱 사용법을 도와줘요</small>
+        </div>
+        <button class="hb-close" @click="open=false">✕</button>
+      </div>
+
+      <div class="hb-body" x-ref="body">
+        <template x-for="(m,i) in msgs" :key="i">
+          <div class="hb-msg" :class="m.who">
+            <span class="hb-av" x-show="m.who==='bot'">🤖</span>
+            <div class="hb-bubble" x-html="m.html"></div>
+          </div>
+        </template>
+        <!-- 추천 질문 칩 -->
+        <div class="hb-chips" x-show="msgs.length <= 1">
+          <template x-for="c in chips" :key="c">
+            <button @click="pick(c)" x-text="c"></button>
+          </template>
+        </div>
+      </div>
+
+      <div class="hb-input">
+        <input x-model="input" @keydown.enter="send()" :disabled="busy"
+               placeholder="과학·앱 사용법을 물어봐!" />
+        <button @click="send()" :disabled="busy">▶</button>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
