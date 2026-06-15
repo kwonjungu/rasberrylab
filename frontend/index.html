@@ -9,24 +9,177 @@
   <script src="/student_lock.js"></script>
   <script src="/chat.js"></script>
   <script src="/panel.js"></script>
+  <script src="/story.js"></script>
   <script src="/app.js"></script>
   <!-- Alpine 은 컴포넌트 정의 이후 마지막에 로드 -->
   <script defer src="/lib/alpine.min.js"></script>
 </head>
 <body data-grade-tier="upper">
   <div id="app" x-data="labApp()">
+
+    <!-- ===================== 탐험 지도 (스테이지 선택) ===================== -->
+    <div class="map-screen" x-show="screen==='map'" x-cloak>
+      <div class="map-sky">
+        <span class="cloud c1">☁️</span><span class="cloud c2">☁️</span><span class="cloud c3">⛅</span>
+        <span class="bird b1">🛰️</span>
+      </div>
+
+      <header class="map-head">
+        <img class="mh-mascot" src="/assets/mascot/labi.svg" alt="라비" @click="showStory=true" title="라비" />
+        <div class="mh-title">🧭 과학 탐험 지도</div>
+        <div class="mh-sub">라비와 함께 스테이지를 골라 미션을 시작해요!</div>
+        <button class="mh-teacher" @click="openTeacher()" title="교사 모드">🎓</button>
+      </header>
+
+      <!-- 학년 필터 -->
+      <nav class="map-tabs">
+        <button :class="{on: gradeFilter==='all'}" @click="gradeFilter='all'">🌍 전체</button>
+        <button :class="{on: gradeFilter==='3'}" @click="gradeFilter='3'">🌱 3학년</button>
+        <button :class="{on: gradeFilter==='4'}" @click="gradeFilter='4'">🔭 4학년</button>
+        <button :class="{on: gradeFilter==='5'}" @click="gradeFilter='5'">⚡ 5학년</button>
+        <button :class="{on: gradeFilter==='6'}" @click="gradeFilter='6'">🚀 6학년</button>
+        <button :class="{on: gradeFilter==='0'}" @click="gradeFilter='0'">🛰 융합</button>
+      </nav>
+
+      <!-- 구역(월드)별 길 위의 스테이지 -->
+      <div class="map-scroll">
+        <template x-for="(rg, ri) in regions" :key="rg.meta.key">
+          <section class="region" :class="rg.meta.klass">
+            <div class="region-banner">
+              <img class="rb-badge" :src="`/assets/region/${rg.meta.key}.svg`" :alt="rg.meta.name" />
+              <span class="rb-name" x-text="rg.meta.name"></span>
+              <span class="rb-count" x-text="rg.stages.length + ' 미션'"></span>
+            </div>
+
+            <div class="trail">
+              <template x-for="st in rg.stages" :key="st.exp.id">
+                <div class="stage" :class="st.side">
+                  <div class="stage-dot"></div>
+                  <button class="stage-card" @click="openBriefing(st.exp)">
+                    <div class="sc-badge" x-text="'STAGE ' + st.n"></div>
+                    <div class="sc-icon" x-text="theme(st.exp).icon"></div>
+                    <div class="sc-title" x-text="st.exp.title"></div>
+                    <div class="sc-tag" x-text="theme(st.exp).tag"></div>
+                    <div class="sc-meta">
+                      <span class="sc-stars" x-text="stars(st.exp.difficulty)"></span>
+                      <span class="sc-time" x-text="'⏱ ' + st.exp.duration_min + '분'"></span>
+                      <span class="sc-safe" :class="safetyBadge(st.exp.safety_level).klass"
+                            x-text="safetyBadge(st.exp.safety_level).txt"></span>
+                    </div>
+                  </button>
+                </div>
+              </template>
+            </div>
+          </section>
+        </template>
+
+        <div class="map-foot">🦊 더 많은 미션이 곧 추가돼요!</div>
+      </div>
+    </div>
+
+    <!-- ===================== 스토리 인트로 오버레이 ===================== -->
+    <div class="story-bg" x-show="showStory" x-cloak>
+      <div class="story-card">
+        <img class="story-mascot" src="/assets/mascot/labi.svg" alt="라비" />
+        <h2 class="story-title" x-text="story.intro.title"></h2>
+        <div class="story-lines">
+          <template x-for="(ln,i) in story.intro.lines" :key="i"><p x-html="ln"></p></template>
+        </div>
+        <button class="story-cta" @click="closeStory()" x-text="'🚀 ' + story.intro.cta"></button>
+      </div>
+    </div>
+
+    <!-- ===================== 미션 클리어 축하 ===================== -->
+    <div class="clear-bg" x-show="celebrate.show" x-cloak>
+      <div class="clear-card">
+        <div class="confetti">🎉🎊✨🏅⭐</div>
+        <img class="clear-mascot" :src="story.mascot.cheer" alt="라비" />
+        <div class="clear-rank">
+          <span x-text="celebrate.rank.icon"></span>
+          <b x-text="celebrate.rank.name + ' 달성!'"></b>
+        </div>
+        <h2 class="clear-title">미션 클리어! 🏆</h2>
+        <p class="clear-line" x-text="celebrate.line"></p>
+        <div class="clear-actions">
+          <button class="clear-map" @click="backToMap()">🗺 지도로 돌아가기</button>
+          <button class="clear-report" @click="openTeacher()">📄 활동지(교사)</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== 미션 브리핑 카드 ===================== -->
+    <div class="modal-bg briefing-bg" x-show="briefing" @click.self="closeBriefing()" x-cloak>
+      <div class="briefing" x-show="briefing">
+        <button class="bf-close" @click="closeBriefing()">✕</button>
+        <div class="bf-hero">
+          <span class="bf-icon" x-text="briefing && theme(briefing).icon"></span>
+          <div>
+            <div class="bf-stage">🎯 MISSION</div>
+            <h2 class="bf-title" x-text="briefing?.title"></h2>
+          </div>
+        </div>
+
+        <!-- 라비의 미션 소개 -->
+        <div class="bf-mascot">
+          <img src="/assets/mascot/labi.svg" alt="라비" />
+          <div class="bf-speech" x-text="briefLine"></div>
+        </div>
+
+        <div class="bf-chips">
+          <span class="chip" x-text="'⭐ 난이도 ' + (briefing?.difficulty)"></span>
+          <span class="chip" x-text="'⏱ ' + (briefing?.duration_min) + '분'"></span>
+          <span class="chip" :class="briefing && safetyBadge(briefing.safety_level).klass"
+                x-text="briefing && safetyBadge(briefing.safety_level).txt"></span>
+        </div>
+
+        <div class="bf-block" x-show="briefing?.objectives?.length">
+          <div class="bf-h">🎯 미션 목표</div>
+          <ul><template x-for="o in (briefing?.objectives||[])" :key="o"><li x-text="o"></li></template></ul>
+        </div>
+
+        <div class="bf-block" x-show="briefing?.hypothesis_prompt">
+          <div class="bf-h">🔮 함께 생각해요</div>
+          <p x-text="briefing?.hypothesis_prompt"></p>
+        </div>
+
+        <div class="bf-block" x-show="briefing?.required_sensors?.length">
+          <div class="bf-h">🧰 준비물 / 센서</div>
+          <div class="bf-sensors">
+            <template x-for="s in (briefing?.required_sensors||[])" :key="s"><span class="pill" x-text="'📟 ' + s"></span></template>
+            <template x-for="m in (briefing?.extra_materials||[])" :key="m"><span class="pill ghost" x-text="m"></span></template>
+          </div>
+        </div>
+
+        <button class="bf-start" @click="startMission(briefing)">🚀 미션 시작!</button>
+      </div>
+    </div>
+
+    <!-- ===================== 미션 수행 화면(챗) ===================== -->
     <!-- 헤더 -->
-    <div class="topbar">
+    <div class="topbar" x-show="screen==='mission'">
+      <button class="backmap" @click="backToMap()" title="지도로">🗺</button>
       <span class="title">🧪 <span x-text="teamName ? teamName + ' 모둠' : 'Science Lab'"></span></span>
+      <span x-show="expTitle" class="mission-name" x-text="expTitle"></span>
       <span class="spacer"></span>
-      <span x-show="expTitle" x-text="expTitle" style="font-size:.8em;opacity:.9"></span>
       <button @click="onQuick({id:'help',label:'🤚 도와줘'})">🔔 도움요청</button>
       <button @click="showHistory=!showHistory">🗂 지난대화</button>
       <button @click="openTeacher()">🎓 교사</button>
     </div>
 
+    <!-- 미션 진행률 — 단계 점 인디케이터 -->
+    <div class="mission-hud" x-show="screen==='mission' && mode==='experiment' && totalSteps>0">
+      <div class="steps-track">
+        <template x-for="i in totalSteps" :key="i">
+          <div class="step-dot" :class="{ done: i < stepN, active: i === stepN }">
+            <span x-text="i < stepN ? '✓' : i"></span>
+          </div>
+        </template>
+      </div>
+      <div class="hud-label">🏁 <b x-text="stepN"></b> / <span x-text="totalSteps"></span> 단계</div>
+    </div>
+
     <!-- 역할 (탭하면 이름 정하기) -->
-    <div class="roles" @click="showRoles=true" title="역할 정하기">
+    <div class="roles" x-show="screen==='mission'" @click="showRoles=true" title="역할 정하기">
       <template x-for="rc in roleCards" :key="rc.id">
         <span class="role"><span x-text="rc.icon + ' ' + rc.name"></span><span x-show="roleNames[rc.id]" x-text="' · ' + roleNames[rc.id]"></span></span>
       </template>
@@ -34,16 +187,26 @@
     </div>
 
     <!-- 메인 -->
-    <div class="main">
-      <div class="stepinfo" x-show="mode==='experiment'">
-        🧭 <span x-text="stepN"></span> / <span x-text="totalSteps"></span> 단계
-      </div>
+    <div class="main" x-show="screen==='mission'">
 
-      <div class="bubble" :class="{thinking: thinking}">
-        <template x-if="thinking"><span>🤖 AI가 생각 중이야... 잠깐만 🤔</span></template>
-        <template x-if="!thinking"><div x-html="bubbleHtml || '...'"></div></template>
-        <div class="bubble-actions" x-show="bubble && !thinking">
-          <button @click="repeatTts()">🔊 다시 듣기</button>
+      <!-- 미션 카드: 삽화 + 단계 배지 + 안내문을 한 묶음으로 -->
+      <div class="mission-card">
+        <!-- 단계 삽화 -->
+        <div class="mc-illust" x-show="stepImage" x-cloak>
+          <span class="mc-badge" x-show="mode==='experiment'" x-text="'STEP ' + stepN"></span>
+          <img :src="stepImage" alt="이번 단계" />
+        </div>
+        <!-- 인사 단계 등 삽화 없을 때: 라비 등장 -->
+        <div class="mc-greet" x-show="!stepImage" x-cloak>
+          <img src="/assets/mascot/labi.svg" alt="라비" />
+        </div>
+
+        <div class="bubble" :class="{thinking: thinking}">
+          <template x-if="thinking"><span>🤖 AI가 생각 중이야... 잠깐만 🤔</span></template>
+          <template x-if="!thinking"><div x-html="bubbleHtml || '...'"></div></template>
+          <div class="bubble-actions" x-show="bubble && !thinking">
+            <button @click="repeatTts()">🔊 다시 듣기</button>
+          </div>
         </div>
       </div>
 
@@ -79,15 +242,18 @@
       </div>
     </div>
 
-    <!-- 빠른답변 -->
-    <div class="quick">
+    <!-- 빠른답변 (행동 위계: 주요 = 풀폭, 보조 = 작게) -->
+    <div class="quick" x-show="screen==='mission'">
       <template x-for="btn in quickReplies" :key="btn.id">
-        <button :class="{help: btn.id==='help', begin: btn.id==='begin'}" @click="onQuick(btn)" x-text="btn.label"></button>
+        <button
+          :class="{ primary: btn.id==='begin' || btn.id==='done', begin: btn.id==='begin',
+                    help: btn.id==='help', helper: btn.id==='stuck' || btn.id==='repeat' }"
+          @click="onQuick(btn)" x-text="btn.label"></button>
       </template>
     </div>
 
     <!-- 입력바 -->
-    <div class="inputbar">
+    <div class="inputbar" x-show="screen==='mission'">
       <input x-model="inputText" @keydown.enter="sendText()"
         placeholder="🎤 말하거나 키보드로 적어줘..." />
       <button @click="sendText()">전송 ▶</button>

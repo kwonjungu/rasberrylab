@@ -129,6 +129,11 @@ async def current(session_id: str):
         if step:
             out["instruction"] = step.instruction_student
             out["duration_sec"] = step.duration_sec
+            out["image_path"] = getattr(step, "image_path", None)
+    if mode == "onboarding" and ob:
+        stage = next((st for st in ob.stages if st.n == step_n), None)
+        if stage:
+            out["image_path"] = getattr(stage, "image_path", None)
     return out
 
 

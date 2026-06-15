@@ -8,3 +8,7 @@ paho-mqtt==2.1.0
 # Day 4: PDF 활동지 (그래프+문서). 한글은 assets/fonts/NanumGothic 번들 사용
 matplotlib==3.11.0
 reportlab==4.5.1
+# 벡터 임베딩/큐레이션(부팅 시 import). 원본 requirements 누락분 — 외부 자문 보강
+numpy
+# 데스크톱 아이콘 생성용(선택)
+pillow

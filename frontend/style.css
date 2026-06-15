@@ -1,5 +1,14 @@
 /* Science AI Lab — 학생 화면 (1m 거리 가독성, 키즈 친화)
    학년별 폰트는 body[data-grade-tier] 로 분기 (age_adapter). */
+
+/* 구글 Jua(주아체) — 오프라인 교실 대비 자체 번들(자체 호스팅) */
+@font-face {
+  font-family: "Jua";
+  src: url("/assets/fonts/Jua-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-display: swap;
+}
+
 :root {
   --bg: #f3f7ff;
   --card: #ffffff;
@@ -22,9 +31,10 @@ body[data-grade-tier="lower"] {
 }
 
 * { box-sizing: border-box; }
+input, textarea, select, button { font-family: "Jua", "Noto Sans KR", sans-serif; }
 html, body {
   margin: 0; height: 100%;
-  font-family: "Pretendard", "Noto Sans KR", system-ui, sans-serif;
+  font-family: "Jua", "Noto Sans KR", system-ui, sans-serif;
   background: var(--bg); color: var(--ink);
   font-size: var(--font-body);
 }
@@ -123,3 +133,294 @@ html, body {
 .history-panel h3 { margin-top: 0; }
 .history-panel .h { margin: 10px 0; font-size: .8em; }
 .history-panel .h .who { font-weight: 700; }
+
+/* ===================================================================
+   탐험 지도 (스테이지 선택) — 게임형 어드벤처 맵
+   =================================================================== */
+.map-screen {
+  position: absolute; inset: 0; display: flex; flex-direction: column;
+  background:
+    radial-gradient(1200px 480px at 50% -180px, #cfe6ff 0%, transparent 70%),
+    linear-gradient(180deg, #eaf3ff 0%, #f4f9ff 38%, #eef9f0 100%);
+  overflow: hidden;
+}
+/* 떠다니는 구름 */
+.map-sky { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+.map-sky .cloud, .map-sky .bird { position: absolute; opacity: .85; font-size: 44px; filter: drop-shadow(0 6px 6px rgba(80,120,200,.12)); }
+.map-sky .c1 { top: 8%;  left: -10%; animation: drift 46s linear infinite; }
+.map-sky .c2 { top: 20%; left: -10%; font-size: 60px; animation: drift 64s linear infinite 6s; }
+.map-sky .c3 { top: 5%;  left: -10%; font-size: 38px; animation: drift 80s linear infinite 12s; }
+.map-sky .b1 { top: 12%; left: -10%; font-size: 30px; animation: drift 30s linear infinite 3s; }
+@keyframes drift { from { transform: translateX(0); } to { transform: translateX(130vw); } }
+
+/* 지도 헤더 */
+.map-head { position: relative; z-index: 2; text-align: center; padding: 22px 16px 10px; }
+.map-head .mh-title { font-size: 2em; font-weight: 900; color: #1d4ed8; letter-spacing: -.5px;
+  text-shadow: 0 2px 0 #fff, 0 6px 14px rgba(29,78,216,.18); }
+.map-head .mh-sub { font-size: .9em; color: #5b6b8a; margin-top: 4px; font-weight: 700; }
+.map-head .mh-teacher { position: absolute; top: 18px; right: 18px; border: 0; background: #ffffffcc;
+  border-radius: 14px; width: 50px; height: 50px; font-size: 1.4em; cursor: pointer; box-shadow: 0 3px 0 #cbd5e1; }
+
+/* 학년 필터 탭 */
+.map-tabs { position: relative; z-index: 2; display: flex; flex-wrap: wrap; gap: 10px;
+  justify-content: center; padding: 6px 16px 14px; }
+.map-tabs button {
+  border: 0; background: #ffffff; color: #2b3a5e; border-radius: 999px;
+  padding: 12px 20px; font-size: .85em; font-weight: 800; cursor: pointer;
+  box-shadow: 0 3px 0 #c7d6ef; transition: transform .08s;
+}
+.map-tabs button:active { transform: translateY(2px); box-shadow: none; }
+.map-tabs button.on { background: var(--primary); color: #fff; box-shadow: 0 3px 0 var(--primary-dark); }
+
+/* 스크롤 영역 + 구역 */
+.map-scroll { position: relative; z-index: 1; flex: 1; overflow-y: auto; padding: 6px 0 40px; }
+.region { position: relative; margin: 0 auto 8px; max-width: 980px; padding: 14px 20px 30px; }
+.region.rg-3  { background: linear-gradient(180deg, rgba(34,197,94,.06), transparent 80%); }
+.region.rg-4  { background: linear-gradient(180deg, rgba(99,102,241,.06), transparent 80%); }
+.region.rg-5  { background: linear-gradient(180deg, rgba(245,158,11,.07), transparent 80%); }
+.region.rg-6  { background: linear-gradient(180deg, rgba(236,72,153,.06), transparent 80%); }
+.region.rg-fx { background: linear-gradient(180deg, rgba(14,165,233,.07), transparent 80%); }
+
+.region-banner { display: flex; align-items: center; gap: 12px; justify-content: center;
+  font-weight: 900; font-size: 1.25em; color: #16243f; margin: 8px 0 24px; }
+.region-banner .rb-emoji { font-size: 1.3em; }
+.region-banner .rb-count { font-size: .55em; font-weight: 800; color: #fff; background: #64748b;
+  padding: 4px 12px; border-radius: 999px; }
+
+/* 구불구불한 길 */
+.trail { position: relative; display: flex; flex-direction: column; gap: 30px; }
+.trail::before {
+  content: ""; position: absolute; top: 10px; bottom: 10px; left: 50%; width: 0;
+  border-left: 5px dashed #bcd0ef; transform: translateX(-50%); z-index: 0;
+}
+.stage { position: relative; z-index: 1; display: flex; width: 100%; }
+.stage.left  { justify-content: flex-start; }
+.stage.right { justify-content: flex-end; }
+.stage-dot { position: absolute; top: 28px; left: 50%; width: 20px; height: 20px; transform: translateX(-50%);
+  background: #fff; border: 5px solid var(--primary); border-radius: 50%; z-index: 2;
+  box-shadow: 0 0 0 4px #eaf2ff; }
+
+/* 스테이지 카드 */
+.stage-card {
+  position: relative; width: 46%; min-width: 280px; text-align: left; cursor: pointer;
+  background: #fff; border: 0; border-radius: 22px; padding: 18px 20px 16px;
+  box-shadow: 0 8px 0 #d3def1, 0 16px 26px rgba(50,90,170,.14);
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.stage-card:hover { transform: translateY(-4px); box-shadow: 0 12px 0 #cbd9f0, 0 20px 30px rgba(50,90,170,.20); }
+.stage-card:active { transform: translateY(4px); box-shadow: 0 3px 0 #d3def1; }
+.sc-badge { display: inline-block; font-size: .6em; font-weight: 900; letter-spacing: 1px;
+  color: #fff; background: var(--primary); padding: 4px 12px; border-radius: 999px; }
+.sc-icon { font-size: 2.6em; line-height: 1; margin: 6px 0 4px; filter: drop-shadow(0 4px 6px rgba(0,0,0,.12)); }
+.sc-title { font-size: 1.05em; font-weight: 900; color: #14233f; line-height: 1.25; }
+.sc-tag { font-size: .72em; color: #5b6b8a; margin: 4px 0 12px; font-weight: 600; }
+.sc-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: .66em; font-weight: 800; }
+.sc-stars { color: #f59e0b; letter-spacing: -2px; }
+.sc-time { color: #475569; background: #eef2f9; padding: 3px 10px; border-radius: 999px; }
+.sc-safe, .chip.sf-low, .chip.sf-mid, .chip.sf-high { padding: 3px 10px; border-radius: 999px; }
+.sf-low  { color: #15803d; background: #dcfce7; }
+.sf-mid  { color: #b45309; background: #fef3c7; }
+.sf-high { color: #b91c1c; background: #fee2e2; }
+
+.map-foot { text-align: center; color: #94a3b8; font-weight: 700; font-size: .85em; padding: 20px; }
+
+/* ===================== 미션 브리핑 카드 ===================== */
+.briefing-bg { z-index: 55; }
+.briefing {
+  position: relative; background: #fff; border-radius: 28px; padding: 26px 28px 24px;
+  max-width: 560px; width: 92%; max-height: 88vh; overflow-y: auto;
+  box-shadow: 0 24px 60px rgba(20,40,90,.35); animation: pop .22s cubic-bezier(.2,1.2,.3,1);
+}
+@keyframes pop { from { transform: scale(.88) translateY(12px); opacity: 0; } to { transform: none; opacity: 1; } }
+.bf-close { position: absolute; top: 16px; right: 16px; border: 0; background: #eef2f9; color: #475569;
+  width: 40px; height: 40px; border-radius: 50%; font-size: 1.1em; cursor: pointer; }
+.bf-hero { display: flex; align-items: center; gap: 16px; }
+.bf-icon { font-size: 3.4em; filter: drop-shadow(0 6px 8px rgba(0,0,0,.14)); }
+.bf-stage { font-size: .7em; font-weight: 900; letter-spacing: 2px; color: var(--primary); }
+.bf-title { margin: 2px 0 0; font-size: 1.5em; font-weight: 900; color: #14233f; line-height: 1.2; }
+.bf-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 6px; }
+.bf-chips .chip { font-size: .72em; font-weight: 800; color: #475569; background: #eef2f9;
+  padding: 6px 14px; border-radius: 999px; }
+.bf-block { margin-top: 16px; }
+.bf-block .bf-h { font-weight: 900; color: #1d4ed8; font-size: .9em; margin-bottom: 6px; }
+.bf-block ul { margin: 0; padding-left: 22px; }
+.bf-block li, .bf-block p { font-size: .82em; line-height: 1.45; color: #2b3a5e; margin: 4px 0; }
+.bf-sensors { display: flex; flex-wrap: wrap; gap: 8px; }
+.bf-sensors .pill { font-size: .72em; font-weight: 700; color: #1e3a8a; background: #e0ecff;
+  padding: 6px 12px; border-radius: 12px; }
+.bf-sensors .pill.ghost { color: #64748b; background: #f1f5f9; }
+.bf-start {
+  margin-top: 24px; width: 100%; border: 0; border-radius: 18px; padding: 18px;
+  font-size: 1.15em; font-weight: 900; color: #fff; cursor: pointer;
+  background: linear-gradient(135deg, #22c55e, #16a34a); box-shadow: 0 5px 0 #15803d;
+}
+.bf-start:active { transform: translateY(3px); box-shadow: none; }
+
+/* ===================== 미션 HUD / 토픽바 보강 ===================== */
+.topbar .backmap { background: rgba(255,255,255,.22); font-size: 1.1em; padding: 8px 12px; }
+.topbar .mission-name { font-size: .82em; opacity: .95; font-weight: 700;
+  background: rgba(255,255,255,.18); padding: 5px 12px; border-radius: 999px; }
+.mission-hud { display: flex; align-items: center; gap: 12px; padding: 10px 22px;
+  background: #e6effe; border-bottom: 1px solid #d6e4ff; }
+.mission-hud .hud-steps { font-weight: 800; color: var(--primary-dark); font-size: .82em; white-space: nowrap; }
+.mission-hud .hud-bar { flex: 1; height: 14px; background: #cdddf7; border-radius: 999px; overflow: hidden; }
+.mission-hud .hud-bar > span { display: block; height: 100%; border-radius: 999px;
+  background: linear-gradient(90deg, #22c55e, #4ade80); transition: width .5s ease; }
+.mission-hud .hud-pct { font-weight: 900; color: #16a34a; font-size: .82em; min-width: 46px; text-align: right; }
+
+/* ===================== 마스코트 / 지도 헤더 보강 ===================== */
+.map-head .mh-mascot { position: absolute; top: 6px; left: 18px; width: 76px; height: 82px;
+  cursor: pointer; animation: bob 3s ease-in-out infinite; }
+@keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+
+/* 구역 배너 배지 */
+.region-banner .rb-badge { width: 56px; height: 62px; filter: drop-shadow(0 4px 6px rgba(0,0,0,.15)); }
+
+/* 단계 삽화 */
+.step-illust { width: 100%; max-width: 520px; border-radius: 22px; margin-bottom: 16px;
+  box-shadow: 0 8px 22px rgba(50,90,170,.16); background: #fff; }
+
+/* ===================== 스토리 인트로 오버레이 ===================== */
+.story-bg { position: fixed; inset: 0; z-index: 80; display: flex; align-items: center; justify-content: center;
+  background: radial-gradient(900px 600px at 50% 30%, rgba(59,130,246,.55), rgba(15,23,42,.82)); }
+.story-card { position: relative; background: #fff; border-radius: 30px; padding: 34px 32px 28px;
+  max-width: 560px; width: 92%; text-align: center; box-shadow: 0 30px 70px rgba(0,0,0,.4);
+  animation: pop .28s cubic-bezier(.2,1.2,.3,1); }
+.story-mascot { width: 130px; height: 140px; margin-top: -100px; animation: bob 3s ease-in-out infinite; }
+.story-title { font-size: 1.55em; font-weight: 900; color: #1d4ed8; margin: 6px 0 14px; }
+.story-lines p { font-size: .92em; line-height: 1.6; color: #2b3a5e; margin: 8px 0; }
+.story-cta { margin-top: 22px; width: 100%; border: 0; border-radius: 18px; padding: 18px;
+  font-size: 1.15em; font-weight: 900; color: #fff; cursor: pointer;
+  background: linear-gradient(135deg, #3b82f6, #2563eb); box-shadow: 0 5px 0 #1d4ed8; }
+.story-cta:active { transform: translateY(3px); box-shadow: none; }
+
+/* 브리핑 내 라비 말풍선 */
+.bf-mascot { display: flex; align-items: center; gap: 12px; margin: 16px 0 4px;
+  background: #eef4ff; border-radius: 18px; padding: 12px 14px; }
+.bf-mascot img { width: 56px; height: 60px; flex: none; }
+.bf-speech { font-size: .82em; font-weight: 700; color: #1e3a8a; line-height: 1.4; }
+
+/* ===================== 미션 클리어 축하 ===================== */
+.clear-bg { position: fixed; inset: 0; z-index: 90; display: flex; align-items: center; justify-content: center;
+  background: radial-gradient(900px 600px at 50% 40%, rgba(34,197,94,.5), rgba(15,23,42,.85)); }
+.clear-card { position: relative; background: #fff; border-radius: 30px; padding: 30px 30px 26px;
+  max-width: 520px; width: 92%; text-align: center; box-shadow: 0 30px 70px rgba(0,0,0,.45);
+  animation: pop .3s cubic-bezier(.2,1.4,.3,1); }
+.clear-card .confetti { font-size: 1.6em; letter-spacing: 6px; animation: bob 2.4s ease-in-out infinite; }
+.clear-mascot { width: 140px; height: 150px; margin-top: -8px; }
+.clear-rank { display: inline-flex; align-items: center; gap: 8px; background: #fff7e6; color: #b45309;
+  font-weight: 900; padding: 8px 18px; border-radius: 999px; font-size: 1em; box-shadow: 0 3px 0 #fde68a; }
+.clear-rank span { font-size: 1.3em; }
+.clear-title { font-size: 1.7em; font-weight: 900; color: #16a34a; margin: 14px 0 6px; }
+.clear-line { font-size: .9em; color: #2b3a5e; line-height: 1.5; margin: 0 0 8px; }
+.clear-actions { display: flex; gap: 12px; margin-top: 20px; }
+.clear-actions button { flex: 1; border: 0; border-radius: 16px; padding: 16px; font-size: 1em;
+  font-weight: 800; cursor: pointer; }
+.clear-map { color: #fff; background: linear-gradient(135deg,#22c55e,#16a34a); box-shadow: 0 4px 0 #15803d; }
+.clear-report { color: #1e3a8a; background: #e0ecff; box-shadow: 0 4px 0 #b9d2ff; }
+.clear-actions button:active { transform: translateY(3px); box-shadow: none; }
+
+@media (max-width: 560px) {
+  .stage-card { width: 88%; min-width: 0; }
+  .stage.left, .stage.right { justify-content: center; }
+  .map-head .mh-mascot { width: 58px; height: 64px; }
+}
+
+/* ===================================================================
+   통일 버튼·컨트롤 폴리시 레이어 (일괄 마감) — 모든 버튼에 같은 인터랙션
+   =================================================================== */
+button {
+  font-family: inherit;
+  transition: transform .08s ease, box-shadow .12s ease, background .15s ease, filter .15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+/* 키보드 접근성: 포커스 링 */
+button:focus-visible, input:focus-visible, a:focus-visible {
+  outline: 3px solid #93c5fd; outline-offset: 2px; border-radius: 12px;
+}
+button:disabled { opacity: .5; cursor: not-allowed; filter: grayscale(.25); transform: none !important; }
+
+/* '3D 눌림' 계열: hover 시 살짝 밝게(공통 톤) */
+.quick button:hover:not(:disabled), .big-ok:hover, .map-tabs button:hover,
+.bf-start:hover, .story-cta:hover, .clear-actions button:hover,
+.inputbar button:hover { filter: brightness(1.05); }
+
+/* 토픽바 버튼 — 통일된 눌림감 + hover */
+.topbar button { border-radius: 14px; }
+.topbar button:hover { background: rgba(255,255,255,.34); }
+.topbar button:active { transform: translateY(2px); }
+
+/* 입력바 전송 버튼 — 3D 눌림으로 통일 */
+.inputbar button { box-shadow: 0 4px 0 #1e3a8a; }
+.inputbar button:active { transform: translateY(3px); box-shadow: none; }
+/* 입력창 포커스 강조 */
+.inputbar input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(59,130,246,.16); outline: 0; }
+
+/* 말풍선 액션 버튼 */
+.bubble-actions button:hover { background: #eef4ff; border-color: var(--primary); }
+.bubble-actions button:active { transform: translateY(2px); }
+
+/* 교사 패널 버튼 — 같은 눌림 언어로 통일 */
+.tp-controls button, .tp-inject button, .tp-head button {
+  box-shadow: 0 3px 0 rgba(0,0,0,.28);
+}
+.tp-controls button:hover, .tp-inject button:hover, .tp-head button:hover { filter: brightness(1.08); }
+.tp-controls button:active, .tp-inject button:active, .tp-head button:active {
+  transform: translateY(2px); box-shadow: none;
+}
+
+/* 브리핑 닫기·지도교사 등 원형 버튼 hover */
+.bf-close:hover, .mh-teacher:hover { filter: brightness(.96); transform: translateY(-1px); }
+.bf-close:active, .mh-teacher:active { transform: translateY(1px); }
+
+/* 스테이지/탭/칩 미세 인터랙션 */
+.map-tabs button:hover:not(.on) { background: #f0f6ff; }
+.bf-chips .chip { transition: transform .1s ease; }
+
+/* 둥근 커스텀 스크롤바(앱 전체) */
+*::-webkit-scrollbar { width: 10px; height: 10px; }
+*::-webkit-scrollbar-thumb { background: #c7d6ef; border-radius: 999px; border: 2px solid transparent; background-clip: content-box; }
+*::-webkit-scrollbar-thumb:hover { background: #aebfdd; background-clip: content-box; }
+*::-webkit-scrollbar-track { background: transparent; }
+
+/* 모달 등장 부드럽게(공통) */
+.modal { animation: pop .2s cubic-bezier(.2,1.2,.3,1); }
+
+/* ===================================================================
+   미션 수행 화면 — 직관성 개선 (단계 점 · 미션 카드 · 버튼 위계)
+   =================================================================== */
+/* 단계 점 인디케이터 */
+.mission-hud { display: flex; flex-direction: column; gap: 8px; align-items: center;
+  padding: 12px 22px; background: #e6effe; border-bottom: 1px solid #d6e4ff; }
+.steps-track { display: flex; align-items: center; }
+.step-dot { position: relative; width: 34px; height: 34px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; flex: none;
+  font-weight: 800; font-size: .82em; background: #cdddf7; color: #5b6b8a; transition: all .25s ease; }
+.step-dot:not(:first-child) { margin-left: 36px; }
+.step-dot:not(:first-child)::before { content: ""; position: absolute; right: 100%;
+  width: 36px; height: 4px; top: 50%; transform: translateY(-50%); background: #cdddf7; transition: background .25s; }
+.step-dot.done { background: #22c55e; color: #fff; }
+.step-dot.done::before { background: #22c55e; }
+.step-dot.active { background: var(--primary); color: #fff; transform: scale(1.18);
+  box-shadow: 0 0 0 5px rgba(59,130,246,.20); }
+.hud-label { font-weight: 800; color: var(--primary-dark); font-size: .82em; }
+
+/* 미션 카드: 삽화 + 단계 배지 + 안내문 한 묶음 */
+.mission-card { width: 100%; max-width: 840px; background: #fff; border: 2px solid #e3ecfb;
+  border-radius: 26px; padding: 18px; display: flex; flex-direction: column; gap: 14px;
+  box-shadow: 0 10px 28px rgba(50,90,170,.10); }
+.mc-illust { position: relative; align-self: center; width: 100%; max-width: 460px; }
+.mc-illust img { width: 100%; border-radius: 18px; display: block; }
+.mc-badge { position: absolute; top: 12px; left: 12px; z-index: 1;
+  background: var(--primary); color: #fff; font-weight: 900; font-size: .7em; letter-spacing: 1px;
+  padding: 6px 14px; border-radius: 999px; box-shadow: 0 3px 0 var(--primary-dark); }
+.mc-greet { align-self: center; }
+.mc-greet img { width: 118px; height: 128px; animation: bob 3s ease-in-out infinite; }
+/* 카드 안에서는 말풍선의 자체 그림자/테두리를 덜어 통합감 */
+.mission-card .bubble { box-shadow: none; border: 2px solid #e8effb; margin: 0; }
+
+/* 빠른답변 위계: 주요 행동 = 풀폭 큼직, 보조 = 작게 */
+.quick button.primary { grid-column: 1 / -1; font-size: 1.2em; padding: calc(var(--btn-pad) + 4px);
+  background: var(--accent); box-shadow: 0 5px 0 #16a34a; }
+.quick button.helper { background: #eef2f9; color: #33415c; box-shadow: 0 4px 0 #cdd9ee; font-size: .95em; }
+.quick button.helper:hover { filter: none; background: #e4ebf6; }

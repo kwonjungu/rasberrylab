@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 320" width="480" height="320" role="img" aria-label="버튼 배선">
+  <rect x="6" y="6" width="468" height="308" rx="28" fill="#f7faff" stroke="#e2e8f0" stroke-width="4"/>
+  <rect x="36" y="26" width="408" height="48" rx="14" fill="#22c55e"/>
+  <text x="58" y="57" font-size="24" font-weight="800" fill="#fff"
+        font-family="'Noto Sans KR','Malgun Gothic',sans-serif">버튼</text>
+  <text x="426" y="56" font-size="16" fill="#ffffff" opacity="0.9" text-anchor="end"
+        font-family="monospace">Button</text>
+  <!-- 센서 모듈 -->
+  <rect x="60" y="96" width="150" height="64" rx="12" fill="#22c55e" opacity="0.92"/>
+  <text x="135" y="135" font-size="18" font-weight="700" fill="#fff" text-anchor="middle"
+        font-family="monospace">Button</text>
+  <!-- 점퍼선 3개(빨강/검정/노랑) -->
+  <path d="M210 112 C 280 100, 300 150, 360 150" stroke="#ef4444" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <path d="M210 130 C 280 140, 300 172, 360 172" stroke="#111827" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <path d="M210 148 C 280 180, 300 196, 360 194" stroke="#f59e0b" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <!-- 빵판 -->
+  <rect x="52" y="186" width="376" height="104" rx="14" fill="#eef2f9" stroke="#dbe3ef" stroke-width="3"/>
+  <circle cx="70" cy="150" r="3.2" fill="#cbd5e1"/><circle cx="98" cy="150" r="3.2" fill="#cbd5e1"/><circle cx="126" cy="150" r="3.2" fill="#cbd5e1"/><circle cx="154" cy="150" r="3.2" fill="#cbd5e1"/><circle cx="182" cy="150" r="3.2" fill="#cbd5e1"/><circle cx="210" cy="150" r="3.2" fill="#cbd5e1"/><circle cx="238" cy="150" r="3.2" fill="#cbd5e1"/><circle cx="266" cy="150" r="3.2" fill="#cbd5e1"/><circle cx="294" cy="150" r="3.2" fill="#cbd5e1"/><circle cx="322" cy="150" r="3.2" fill="#cbd5e1"/><circle cx="350" cy="150" r="3.2" fill="#cbd5e1"/><circle cx="378" cy="150" r="3.2" fill="#cbd5e1"/><circle cx="70" cy="172" r="3.2" fill="#cbd5e1"/><circle cx="98" cy="172" r="3.2" fill="#cbd5e1"/><circle cx="126" cy="172" r="3.2" fill="#cbd5e1"/><circle cx="154" cy="172" r="3.2" fill="#cbd5e1"/><circle cx="182" cy="172" r="3.2" fill="#cbd5e1"/><circle cx="210" cy="172" r="3.2" fill="#cbd5e1"/><circle cx="238" cy="172" r="3.2" fill="#cbd5e1"/><circle cx="266" cy="172" r="3.2" fill="#cbd5e1"/><circle cx="294" cy="172" r="3.2" fill="#cbd5e1"/><circle cx="322" cy="172" r="3.2" fill="#cbd5e1"/><circle cx="350" cy="172" r="3.2" fill="#cbd5e1"/><circle cx="378" cy="172" r="3.2" fill="#cbd5e1"/><circle cx="70" cy="194" r="3.2" fill="#cbd5e1"/><circle cx="98" cy="194" r="3.2" fill="#cbd5e1"/><circle cx="126" cy="194" r="3.2" fill="#cbd5e1"/><circle cx="154" cy="194" r="3.2" fill="#cbd5e1"/><circle cx="182" cy="194" r="3.2" fill="#cbd5e1"/><circle cx="210" cy="194" r="3.2" fill="#cbd5e1"/><circle cx="238" cy="194" r="3.2" fill="#cbd5e1"/><circle cx="266" cy="194" r="3.2" fill="#cbd5e1"/><circle cx="294" cy="194" r="3.2" fill="#cbd5e1"/><circle cx="322" cy="194" r="3.2" fill="#cbd5e1"/><circle cx="350" cy="194" r="3.2" fill="#cbd5e1"/><circle cx="378" cy="194" r="3.2" fill="#cbd5e1"/><circle cx="70" cy="216" r="3.2" fill="#cbd5e1"/><circle cx="98" cy="216" r="3.2" fill="#cbd5e1"/><circle cx="126" cy="216" r="3.2" fill="#cbd5e1"/><circle cx="154" cy="216" r="3.2" fill="#cbd5e1"/><circle cx="182" cy="216" r="3.2" fill="#cbd5e1"/><circle cx="210" cy="216" r="3.2" fill="#cbd5e1"/><circle cx="238" cy="216" r="3.2" fill="#cbd5e1"/><circle cx="266" cy="216" r="3.2" fill="#cbd5e1"/><circle cx="294" cy="216" r="3.2" fill="#cbd5e1"/><circle cx="322" cy="216" r="3.2" fill="#cbd5e1"/><circle cx="350" cy="216" r="3.2" fill="#cbd5e1"/><circle cx="378" cy="216" r="3.2" fill="#cbd5e1"/>
+  <text x="240" y="306" font-size="13" fill="#94a3b8" text-anchor="middle"
+        font-family="'Noto Sans KR',sans-serif">빨강=VCC · 검정=GND · 노랑=신호</text>
+</svg>
