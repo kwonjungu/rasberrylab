@@ -26,7 +26,7 @@ from routers import sensors as sensors_router
 from routers import session as session_router
 from routers import stats as stats_router
 from routers import teacher as teacher_router
-from services import mqtt_client, ws_hub
+from services import mqtt_client, serial_reader, ws_hub
 from services.data_loader import store
 from services.db import init_db
 
@@ -50,8 +50,10 @@ async def lifespan(app: FastAPI):
     import asyncio
     ws_hub.set_loop(asyncio.get_running_loop())
     mqtt_client.start()
+    serial_reader.start()   # USB 직결 ESP(시리얼) — 포트 있으면 자동 시작
     yield
     mqtt_client.stop()
+    serial_reader.stop()
 
 
 app = FastAPI(title="Science AI Lab", version="0.3.0", lifespan=lifespan)
