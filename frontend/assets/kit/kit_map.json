@@ -145,9 +145,14 @@
     "photo": "/assets/kit/light-blocking.png"
   },
   "hc-sr04": {
-    "kit_no": null,
-    "label": "초음파 거리 센서(HC-SR04) — 별도",
-    "photo": null
+    "kit_no": 8,
+    "label": "초음파 거리 센서(HC-SR04)",
+    "photo": "/assets/kit/hc-sr04.png"
+  },
+  "servo": {
+    "kit_no": 9,
+    "label": "서보모터(SG90)",
+    "photo": "/assets/kit/servo.png"
   },
   "linear-hall": {
     "kit_no": null,

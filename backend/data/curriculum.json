@@ -10,11 +10,25 @@
           "id": "3-1-matter-state",
           "title": "물질의 상태",
           "achievement_standards": [
-            { "code": "[4과01-01]", "text": "(요약: 고체·액체·기체의 특징을 관찰하고 비교한다)" }
+            {
+              "code": "[4과01-01]",
+              "text": "(요약: 고체·액체·기체의 특징을 관찰하고 비교한다)"
+            }
           ],
-          "key_concepts": ["고체", "액체", "기체", "상태 변화"],
-          "linked_sensor_ids": ["dht11", "temp-basic", "analog-temp"],
-          "linked_experiment_ids": ["exp-3-ice-melt-temp"],
+          "key_concepts": [
+            "고체",
+            "액체",
+            "기체",
+            "상태 변화"
+          ],
+          "linked_sensor_ids": [
+            "dht11",
+            "temp-basic",
+            "analog-temp"
+          ],
+          "linked_experiment_ids": [
+            "exp-3-ice-melt-temp"
+          ],
           "needs_verification": true,
           "teacher_note": "성취기준 코드·원문 확인 필요"
         },
@@ -22,12 +36,31 @@
           "id": "3-1-magnet",
           "title": "자석의 이용",
           "achievement_standards": [
-            { "code": "[4과05-01]", "text": "(요약: 자석 사이에 작용하는 힘(인력·척력)을 관찰한다)" },
-            { "code": "[4과05-02]", "text": "(요약: 자석이 철로 된 물체를 끌어당기는 성질을 안다)" }
+            {
+              "code": "[4과05-01]",
+              "text": "(요약: 자석 사이에 작용하는 힘(인력·척력)을 관찰한다)"
+            },
+            {
+              "code": "[4과05-02]",
+              "text": "(요약: 자석이 철로 된 물체를 끌어당기는 성질을 안다)"
+            }
           ],
-          "key_concepts": ["인력", "척력", "자기장", "극(N·S)"],
-          "linked_sensor_ids": ["linear-hall", "hall-magnetic", "analog-hall", "reed-switch", "mini-reed"],
-          "linked_experiment_ids": ["exp-3-magnet-distance"],
+          "key_concepts": [
+            "인력",
+            "척력",
+            "자기장",
+            "극(N·S)"
+          ],
+          "linked_sensor_ids": [
+            "linear-hall",
+            "hall-magnetic",
+            "analog-hall",
+            "reed-switch",
+            "mini-reed"
+          ],
+          "linked_experiment_ids": [
+            "exp-3-magnet-distance"
+          ],
           "needs_verification": true,
           "teacher_note": "성취기준 코드·원문 확인 필요"
         },
@@ -35,11 +68,23 @@
           "id": "3-1-animal-lifecycle",
           "title": "동물의 한살이",
           "achievement_standards": [
-            { "code": "[4과03-01]", "text": "(요약: 동물의 한살이 과정을 관찰하고 비교한다)" }
+            {
+              "code": "[4과03-01]",
+              "text": "(요약: 동물의 한살이 과정을 관찰하고 비교한다)"
+            }
           ],
-          "key_concepts": ["한살이", "성장", "변태"],
-          "linked_sensor_ids": ["dht11", "photoresistor"],
-          "linked_experiment_ids": [],
+          "key_concepts": [
+            "한살이",
+            "성장",
+            "변태"
+          ],
+          "linked_sensor_ids": [
+            "dht11",
+            "photoresistor"
+          ],
+          "linked_experiment_ids": [
+            "exp-3-incubator"
+          ],
           "needs_verification": true,
           "teacher_note": "센서 활용도가 낮은 관찰 단원 — 환경(온도·빛) 모니터링으로 연계 가능"
         },
@@ -47,10 +92,20 @@
           "id": "3-2-surface-change",
           "title": "지표의 변화",
           "achievement_standards": [
-            { "code": "[4과11-01]", "text": "(요약: 흐르는 물에 의한 침식·운반·퇴적을 안다)" }
+            {
+              "code": "[4과11-01]",
+              "text": "(요약: 흐르는 물에 의한 침식·운반·퇴적을 안다)"
+            }
           ],
-          "key_concepts": ["침식", "퇴적", "운반"],
-          "linked_sensor_ids": ["tilt-mercury", "ball-switch"],
+          "key_concepts": [
+            "침식",
+            "퇴적",
+            "운반"
+          ],
+          "linked_sensor_ids": [
+            "tilt-mercury",
+            "ball-switch"
+          ],
           "linked_experiment_ids": [],
           "needs_verification": true,
           "teacher_note": "성취기준 코드·원문 확인 필요"
@@ -59,12 +114,31 @@
           "id": "3-2-sound",
           "title": "소리의 성질",
           "achievement_standards": [
-            { "code": "[4과08-01]", "text": "(요약: 소리의 세기와 높낮이를 비교한다)" },
-            { "code": "[4과08-02]", "text": "(요약: 소리가 물질을 통해 전달됨을 안다)" }
+            {
+              "code": "[4과08-01]",
+              "text": "(요약: 소리의 세기와 높낮이를 비교한다)"
+            },
+            {
+              "code": "[4과08-02]",
+              "text": "(요약: 소리가 물질을 통해 전달됨을 안다)"
+            }
           ],
-          "key_concepts": ["진동", "소리의 세기", "높낮이", "전달"],
-          "linked_sensor_ids": ["big-sound", "small-sound", "passive-buzzer", "active-buzzer", "tap"],
-          "linked_experiment_ids": ["exp-3-sound-clap"],
+          "key_concepts": [
+            "진동",
+            "소리의 세기",
+            "높낮이",
+            "전달"
+          ],
+          "linked_sensor_ids": [
+            "big-sound",
+            "small-sound",
+            "passive-buzzer",
+            "active-buzzer",
+            "tap"
+          ],
+          "linked_experiment_ids": [
+            "exp-3-sound-clap"
+          ],
           "needs_verification": true,
           "teacher_note": "성취기준 코드·원문 확인 필요"
         },
@@ -72,11 +146,23 @@
           "id": "3-2-animal-life",
           "title": "동물의 생활",
           "achievement_standards": [
-            { "code": "[4과03-02]", "text": "(요약: 동물을 특징에 따라 분류하고 사는 곳과 관련짓는다)" }
+            {
+              "code": "[4과03-02]",
+              "text": "(요약: 동물을 특징에 따라 분류하고 사는 곳과 관련짓는다)"
+            }
           ],
-          "key_concepts": ["분류", "서식지", "적응"],
-          "linked_sensor_ids": ["avoid-ir", "photoresistor"],
-          "linked_experiment_ids": [],
+          "key_concepts": [
+            "분류",
+            "서식지",
+            "적응"
+          ],
+          "linked_sensor_ids": [
+            "avoid-ir",
+            "photoresistor"
+          ],
+          "linked_experiment_ids": [
+            "exp-3-animal-detector"
+          ],
           "needs_verification": true,
           "teacher_note": "성취기준 코드·원문 확인 필요"
         }
@@ -90,10 +176,22 @@
           "id": "4-1-plant-lifecycle",
           "title": "식물의 한살이",
           "achievement_standards": [
-            { "code": "[4과04-01]", "text": "(요약: 식물의 한살이 과정을 관찰한다)" }
+            {
+              "code": "[4과04-01]",
+              "text": "(요약: 식물의 한살이 과정을 관찰한다)"
+            }
           ],
-          "key_concepts": ["씨앗", "싹트기", "자람", "열매"],
-          "linked_sensor_ids": ["dht11", "photoresistor", "temp-basic"],
+          "key_concepts": [
+            "씨앗",
+            "싹트기",
+            "자람",
+            "열매"
+          ],
+          "linked_sensor_ids": [
+            "dht11",
+            "photoresistor",
+            "temp-basic"
+          ],
           "linked_experiment_ids": [],
           "needs_verification": true,
           "teacher_note": "스마트 화분(융합 실험)과 연계 가능"
@@ -102,9 +200,16 @@
           "id": "4-1-strata-fossil",
           "title": "지층과 화석",
           "achievement_standards": [
-            { "code": "[4과12-01]", "text": "(요약: 지층의 형성과 화석의 의미를 안다)" }
+            {
+              "code": "[4과12-01]",
+              "text": "(요약: 지층의 형성과 화석의 의미를 안다)"
+            }
           ],
-          "key_concepts": ["지층", "퇴적암", "화석"],
+          "key_concepts": [
+            "지층",
+            "퇴적암",
+            "화석"
+          ],
           "linked_sensor_ids": [],
           "linked_experiment_ids": [],
           "needs_verification": true,
@@ -114,10 +219,20 @@
           "id": "4-1-weight",
           "title": "물체의 무게",
           "achievement_standards": [
-            { "code": "[4과07-01]", "text": "(요약: 무게의 의미와 용수철저울의 원리를 안다)" }
+            {
+              "code": "[4과07-01]",
+              "text": "(요약: 무게의 의미와 용수철저울의 원리를 안다)"
+            }
           ],
-          "key_concepts": ["무게", "중력", "용수철"],
-          "linked_sensor_ids": ["shock", "tap"],
+          "key_concepts": [
+            "무게",
+            "중력",
+            "용수철"
+          ],
+          "linked_sensor_ids": [
+            "shock",
+            "tap"
+          ],
           "linked_experiment_ids": [],
           "needs_verification": true,
           "teacher_note": "로드셀(HX711)은 키트에 없음 — 추가 구매 시 정량 측정 가능"
@@ -126,10 +241,20 @@
           "id": "4-2-plant-life",
           "title": "식물의 생활",
           "achievement_standards": [
-            { "code": "[4과04-02]", "text": "(요약: 식물을 특징에 따라 분류하고 사는 곳과 관련짓는다)" }
+            {
+              "code": "[4과04-02]",
+              "text": "(요약: 식물을 특징에 따라 분류하고 사는 곳과 관련짓는다)"
+            }
           ],
-          "key_concepts": ["분류", "잎", "서식 환경"],
-          "linked_sensor_ids": ["photoresistor", "dht11"],
+          "key_concepts": [
+            "분류",
+            "잎",
+            "서식 환경"
+          ],
+          "linked_sensor_ids": [
+            "photoresistor",
+            "dht11"
+          ],
           "linked_experiment_ids": [],
           "needs_verification": true,
           "teacher_note": "성취기준 코드·원문 확인 필요"
@@ -138,10 +263,22 @@
           "id": "4-2-water-state",
           "title": "물의 상태 변화",
           "achievement_standards": [
-            { "code": "[4과01-02]", "text": "(요약: 물의 증발·끓음·응결을 안다)" }
+            {
+              "code": "[4과01-02]",
+              "text": "(요약: 물의 증발·끓음·응결을 안다)"
+            }
           ],
-          "key_concepts": ["증발", "끓음", "응결", "어는점"],
-          "linked_sensor_ids": ["dht11", "digital-temp", "analog-temp"],
+          "key_concepts": [
+            "증발",
+            "끓음",
+            "응결",
+            "어는점"
+          ],
+          "linked_sensor_ids": [
+            "dht11",
+            "digital-temp",
+            "analog-temp"
+          ],
           "linked_experiment_ids": [],
           "needs_verification": true,
           "teacher_note": "디지털 온도(DS18B20)로 물 온도 변화 측정 연계"
@@ -150,12 +287,28 @@
           "id": "4-2-shadow-mirror",
           "title": "그림자와 거울",
           "achievement_standards": [
-            { "code": "[4과09-01]", "text": "(요약: 빛의 직진과 그림자의 관계를 안다)" },
-            { "code": "[4과09-02]", "text": "(요약: 거울에서 빛의 반사를 안다)" }
+            {
+              "code": "[4과09-01]",
+              "text": "(요약: 빛의 직진과 그림자의 관계를 안다)"
+            },
+            {
+              "code": "[4과09-02]",
+              "text": "(요약: 거울에서 빛의 반사를 안다)"
+            }
           ],
-          "key_concepts": ["빛의 직진", "그림자", "반사"],
-          "linked_sensor_ids": ["photoresistor", "light-blocking", "laser"],
-          "linked_experiment_ids": ["exp-4-shadow-light-block"],
+          "key_concepts": [
+            "빛의 직진",
+            "그림자",
+            "반사"
+          ],
+          "linked_sensor_ids": [
+            "photoresistor",
+            "light-blocking",
+            "laser"
+          ],
+          "linked_experiment_ids": [
+            "exp-4-shadow-light-block"
+          ],
           "needs_verification": true,
           "teacher_note": "레이저 사용 시 눈 조준 금지 안전지도 필수"
         },
@@ -163,11 +316,26 @@
           "id": "4-2-volcano-quake",
           "title": "화산과 지진",
           "achievement_standards": [
-            { "code": "[4과13-01]", "text": "(요약: 화산과 지진의 발생과 영향을 안다)" }
+            {
+              "code": "[4과13-01]",
+              "text": "(요약: 화산과 지진의 발생과 영향을 안다)"
+            }
           ],
-          "key_concepts": ["화산", "지진", "진동", "내진"],
-          "linked_sensor_ids": ["shock", "tilt-mercury", "ball-switch"],
-          "linked_experiment_ids": ["exp-4-vibration-shock"],
+          "key_concepts": [
+            "화산",
+            "지진",
+            "진동",
+            "내진"
+          ],
+          "linked_sensor_ids": [
+            "shock",
+            "tilt-mercury",
+            "ball-switch"
+          ],
+          "linked_experiment_ids": [
+            "exp-4-vibration-shock",
+            "exp-4-quake-alarm"
+          ],
           "needs_verification": true,
           "teacher_note": "충격 센서로 지진 모형(흔들림) 감지 연계"
         }
@@ -181,12 +349,30 @@
           "id": "5-1-temp-heat",
           "title": "온도와 열",
           "achievement_standards": [
-            { "code": "[6과01-01]", "text": "(요약: 온도를 측정하고 열의 이동을 안다)" },
-            { "code": "[6과01-02]", "text": "(요약: 단열과 열의 이동 빠르기를 비교한다)" }
+            {
+              "code": "[6과01-01]",
+              "text": "(요약: 온도를 측정하고 열의 이동을 안다)"
+            },
+            {
+              "code": "[6과01-02]",
+              "text": "(요약: 단열과 열의 이동 빠르기를 비교한다)"
+            }
           ],
-          "key_concepts": ["온도", "열의 이동", "전도", "단열"],
-          "linked_sensor_ids": ["dht11", "digital-temp", "analog-temp", "temp-basic"],
-          "linked_experiment_ids": ["exp-5-insulation-compare"],
+          "key_concepts": [
+            "온도",
+            "열의 이동",
+            "전도",
+            "단열"
+          ],
+          "linked_sensor_ids": [
+            "dht11",
+            "digital-temp",
+            "analog-temp",
+            "temp-basic"
+          ],
+          "linked_experiment_ids": [
+            "exp-5-insulation-compare"
+          ],
           "needs_verification": true,
           "teacher_note": "성취기준 코드·원문 확인 필요"
         },
@@ -194,10 +380,19 @@
           "id": "5-1-solar-system",
           "title": "태양계와 별",
           "achievement_standards": [
-            { "code": "[6과14-01]", "text": "(요약: 태양계 구성과 별·별자리를 안다)" }
+            {
+              "code": "[6과14-01]",
+              "text": "(요약: 태양계 구성과 별·별자리를 안다)"
+            }
           ],
-          "key_concepts": ["태양계", "행성", "별자리"],
-          "linked_sensor_ids": ["photoresistor"],
+          "key_concepts": [
+            "태양계",
+            "행성",
+            "별자리"
+          ],
+          "linked_sensor_ids": [
+            "photoresistor"
+          ],
           "linked_experiment_ids": [],
           "needs_verification": true,
           "teacher_note": "센서 비연계 관찰 단원"
@@ -206,10 +401,21 @@
           "id": "5-1-solution",
           "title": "용해와 용액",
           "achievement_standards": [
-            { "code": "[6과02-01]", "text": "(요약: 용해 현상과 용액의 진하기를 비교한다)" }
+            {
+              "code": "[6과02-01]",
+              "text": "(요약: 용해 현상과 용액의 진하기를 비교한다)"
+            }
           ],
-          "key_concepts": ["용해", "용질", "용매", "진하기"],
-          "linked_sensor_ids": ["photoresistor", "digital-temp"],
+          "key_concepts": [
+            "용해",
+            "용질",
+            "용매",
+            "진하기"
+          ],
+          "linked_sensor_ids": [
+            "photoresistor",
+            "digital-temp"
+          ],
           "linked_experiment_ids": [],
           "needs_verification": true,
           "teacher_note": "광센서로 용액 탁도/진하기 간접 비교 가능"
@@ -218,10 +424,19 @@
           "id": "5-1-various-life",
           "title": "다양한 생물",
           "achievement_standards": [
-            { "code": "[6과05-01]", "text": "(요약: 균류·원생생물·세균 등 다양한 생물의 특징을 안다)" }
+            {
+              "code": "[6과05-01]",
+              "text": "(요약: 균류·원생생물·세균 등 다양한 생물의 특징을 안다)"
+            }
           ],
-          "key_concepts": ["균류", "세균", "원생생물"],
-          "linked_sensor_ids": ["dht11"],
+          "key_concepts": [
+            "균류",
+            "세균",
+            "원생생물"
+          ],
+          "linked_sensor_ids": [
+            "dht11"
+          ],
           "linked_experiment_ids": [],
           "needs_verification": true,
           "teacher_note": "곰팡이 배양 환경(온습도) 모니터링 연계"
@@ -230,11 +445,24 @@
           "id": "5-2-life-environment",
           "title": "생물과 환경",
           "achievement_standards": [
-            { "code": "[6과05-02]", "text": "(요약: 생태계 구성 요소와 환경 요인의 영향을 안다)" }
+            {
+              "code": "[6과05-02]",
+              "text": "(요약: 생태계 구성 요소와 환경 요인의 영향을 안다)"
+            }
           ],
-          "key_concepts": ["생태계", "먹이그물", "환경 요인"],
-          "linked_sensor_ids": ["dht11", "photoresistor", "temp-basic"],
-          "linked_experiment_ids": ["exp-fusion-smart-plant"],
+          "key_concepts": [
+            "생태계",
+            "먹이그물",
+            "환경 요인"
+          ],
+          "linked_sensor_ids": [
+            "dht11",
+            "photoresistor",
+            "temp-basic"
+          ],
+          "linked_experiment_ids": [
+            "exp-fusion-smart-plant"
+          ],
           "needs_verification": true,
           "teacher_note": "환경 요인(빛·온도·물) 변화 실험과 연계"
         },
@@ -242,11 +470,24 @@
           "id": "5-2-weather",
           "title": "날씨와 우리 생활",
           "achievement_standards": [
-            { "code": "[6과15-01]", "text": "(요약: 습도·이슬·안개·구름과 날씨 변화를 안다)" }
+            {
+              "code": "[6과15-01]",
+              "text": "(요약: 습도·이슬·안개·구름과 날씨 변화를 안다)"
+            }
           ],
-          "key_concepts": ["습도", "이슬", "기압", "날씨"],
-          "linked_sensor_ids": ["dht11", "analog-temp"],
-          "linked_experiment_ids": [],
+          "key_concepts": [
+            "습도",
+            "이슬",
+            "기압",
+            "날씨"
+          ],
+          "linked_sensor_ids": [
+            "dht11",
+            "analog-temp"
+          ],
+          "linked_experiment_ids": [
+            "exp-5-weather-station"
+          ],
           "needs_verification": true,
           "teacher_note": "DHT11로 습도 변화 관측 연계"
         },
@@ -254,12 +495,32 @@
           "id": "5-2-motion",
           "title": "물체의 운동",
           "achievement_standards": [
-            { "code": "[6과03-01]", "text": "(요약: 물체의 운동을 위치 변화로 나타낸다)" },
-            { "code": "[6과03-02]", "text": "(요약: 물체의 빠르기를 비교하고 속력을 구한다)" }
+            {
+              "code": "[6과03-01]",
+              "text": "(요약: 물체의 운동을 위치 변화로 나타낸다)"
+            },
+            {
+              "code": "[6과03-02]",
+              "text": "(요약: 물체의 빠르기를 비교하고 속력을 구한다)"
+            }
           ],
-          "key_concepts": ["위치", "속력", "거리", "시간", "v=d/t"],
-          "linked_sensor_ids": ["hc-sr04", "shock", "tracking", "dc-motor"],
-          "linked_experiment_ids": ["exp-5-motion-ultrasonic", "exp-5-rc-acceleration"],
+          "key_concepts": [
+            "위치",
+            "속력",
+            "거리",
+            "시간",
+            "v=d/t"
+          ],
+          "linked_sensor_ids": [
+            "hc-sr04",
+            "shock",
+            "tracking",
+            "dc-motor"
+          ],
+          "linked_experiment_ids": [
+            "exp-5-motion-ultrasonic",
+            "exp-5-rc-acceleration"
+          ],
           "needs_verification": true,
           "teacher_note": "초음파로 거리-시간 측정, v=d/t 자동 계산 연계"
         },
@@ -267,10 +528,21 @@
           "id": "5-2-acid-base",
           "title": "산과 염기",
           "achievement_standards": [
-            { "code": "[6과02-02]", "text": "(요약: 산성·염기성 용액의 성질과 지시약 변화를 안다)" }
+            {
+              "code": "[6과02-02]",
+              "text": "(요약: 산성·염기성 용액의 성질과 지시약 변화를 안다)"
+            }
           ],
-          "key_concepts": ["산성", "염기성", "지시약", "중화"],
-          "linked_sensor_ids": ["photoresistor", "rgb-led"],
+          "key_concepts": [
+            "산성",
+            "염기성",
+            "지시약",
+            "중화"
+          ],
+          "linked_sensor_ids": [
+            "photoresistor",
+            "rgb-led"
+          ],
           "linked_experiment_ids": [],
           "needs_verification": true,
           "teacher_note": "지시약 색 변화는 광센서로 간접 관측 가능(정성 실험)"
@@ -285,10 +557,22 @@
           "id": "6-1-plant-structure",
           "title": "식물의 구조와 기능",
           "achievement_standards": [
-            { "code": "[6과06-01]", "text": "(요약: 뿌리·줄기·잎·꽃의 구조와 기능을 안다)" }
+            {
+              "code": "[6과06-01]",
+              "text": "(요약: 뿌리·줄기·잎·꽃의 구조와 기능을 안다)"
+            }
           ],
-          "key_concepts": ["뿌리", "줄기", "잎", "증산", "광합성"],
-          "linked_sensor_ids": ["dht11", "photoresistor"],
+          "key_concepts": [
+            "뿌리",
+            "줄기",
+            "잎",
+            "증산",
+            "광합성"
+          ],
+          "linked_sensor_ids": [
+            "dht11",
+            "photoresistor"
+          ],
           "linked_experiment_ids": [],
           "needs_verification": true,
           "teacher_note": "증산작용을 습도 변화로 관측 연계"
@@ -297,12 +581,31 @@
           "id": "6-1-light-lens",
           "title": "빛과 렌즈",
           "achievement_standards": [
-            { "code": "[6과09-01]", "text": "(요약: 빛의 굴절과 볼록렌즈의 성질을 안다)" },
-            { "code": "[6과09-02]", "text": "(요약: 프리즘으로 빛이 여러 색으로 나뉨을 안다)" }
+            {
+              "code": "[6과09-01]",
+              "text": "(요약: 빛의 굴절과 볼록렌즈의 성질을 안다)"
+            },
+            {
+              "code": "[6과09-02]",
+              "text": "(요약: 프리즘으로 빛이 여러 색으로 나뉨을 안다)"
+            }
           ],
-          "key_concepts": ["굴절", "볼록렌즈", "빛의 합성", "스펙트럼"],
-          "linked_sensor_ids": ["rgb-led", "smd-rgb", "seven-color-flash", "photoresistor", "laser"],
-          "linked_experiment_ids": ["exp-6-color-mixing"],
+          "key_concepts": [
+            "굴절",
+            "볼록렌즈",
+            "빛의 합성",
+            "스펙트럼"
+          ],
+          "linked_sensor_ids": [
+            "rgb-led",
+            "smd-rgb",
+            "seven-color-flash",
+            "photoresistor",
+            "laser"
+          ],
+          "linked_experiment_ids": [
+            "exp-6-color-mixing"
+          ],
           "needs_verification": true,
           "teacher_note": "RGB LED로 빛의 합성(색 섞기) 연계"
         },
@@ -310,10 +613,19 @@
           "id": "6-1-gases",
           "title": "여러 가지 기체",
           "achievement_standards": [
-            { "code": "[6과02-03]", "text": "(요약: 산소·이산화탄소 등 기체의 성질을 안다)" }
+            {
+              "code": "[6과02-03]",
+              "text": "(요약: 산소·이산화탄소 등 기체의 성질을 안다)"
+            }
           ],
-          "key_concepts": ["산소", "이산화탄소", "기체의 성질"],
-          "linked_sensor_ids": ["flame"],
+          "key_concepts": [
+            "산소",
+            "이산화탄소",
+            "기체의 성질"
+          ],
+          "linked_sensor_ids": [
+            "flame"
+          ],
           "linked_experiment_ids": [],
           "needs_verification": true,
           "teacher_note": "기체(MQ 계열) 센서는 키트에 없음 — 추가 구매 필요. 화염센서로 연소 연계만 가능"
@@ -322,11 +634,23 @@
           "id": "6-1-earth-moon",
           "title": "지구와 달의 운동",
           "achievement_standards": [
-            { "code": "[6과14-02]", "text": "(요약: 지구의 자전·공전과 달의 위상 변화를 안다)" }
+            {
+              "code": "[6과14-02]",
+              "text": "(요약: 지구의 자전·공전과 달의 위상 변화를 안다)"
+            }
           ],
-          "key_concepts": ["자전", "공전", "달의 위상"],
-          "linked_sensor_ids": ["photoresistor", "rotary-encoder"],
-          "linked_experiment_ids": [],
+          "key_concepts": [
+            "자전",
+            "공전",
+            "달의 위상"
+          ],
+          "linked_sensor_ids": [
+            "photoresistor",
+            "rotary-encoder"
+          ],
+          "linked_experiment_ids": [
+            "exp-6-moon-phase"
+          ],
           "needs_verification": true,
           "teacher_note": "로터리엔코더로 회전(자전 모형) 표현 가능"
         },
@@ -334,12 +658,37 @@
           "id": "6-2-electricity",
           "title": "전기의 이용",
           "achievement_standards": [
-            { "code": "[6과10-01]", "text": "(요약: 전기 회로에서 전구의 연결 방법과 밝기를 비교한다)" },
-            { "code": "[6과10-02]", "text": "(요약: 전자석의 성질과 이용을 안다)" }
+            {
+              "code": "[6과10-01]",
+              "text": "(요약: 전기 회로에서 전구의 연결 방법과 밝기를 비교한다)"
+            },
+            {
+              "code": "[6과10-02]",
+              "text": "(요약: 전자석의 성질과 이용을 안다)"
+            }
           ],
-          "key_concepts": ["전기 회로", "직렬", "병렬", "전자석", "스위치"],
-          "linked_sensor_ids": ["relay", "button", "touch", "rgb-led", "two-color-led", "active-buzzer", "dc-motor", "hc-sr04"],
-          "linked_experiment_ids": ["exp-6-auto-light", "exp-fusion-auto-door"],
+          "key_concepts": [
+            "전기 회로",
+            "직렬",
+            "병렬",
+            "전자석",
+            "스위치"
+          ],
+          "linked_sensor_ids": [
+            "relay",
+            "button",
+            "touch",
+            "rgb-led",
+            "two-color-led",
+            "active-buzzer",
+            "dc-motor",
+            "hc-sr04"
+          ],
+          "linked_experiment_ids": [
+            "exp-6-auto-light",
+            "exp-fusion-auto-door",
+            "exp-6-electric-signal"
+          ],
           "needs_verification": true,
           "teacher_note": "릴레이로 자동 스위치(자동문) 연계 — 220V 사용 시 교사 동반 필수"
         },
@@ -347,10 +696,20 @@
           "id": "6-2-season",
           "title": "계절의 변화",
           "achievement_standards": [
-            { "code": "[6과14-03]", "text": "(요약: 계절 변화의 원인(자전축 기울기)을 안다)" }
+            {
+              "code": "[6과14-03]",
+              "text": "(요약: 계절 변화의 원인(자전축 기울기)을 안다)"
+            }
           ],
-          "key_concepts": ["자전축", "남중고도", "계절"],
-          "linked_sensor_ids": ["photoresistor", "tilt-mercury"],
+          "key_concepts": [
+            "자전축",
+            "남중고도",
+            "계절"
+          ],
+          "linked_sensor_ids": [
+            "photoresistor",
+            "tilt-mercury"
+          ],
           "linked_experiment_ids": [],
           "needs_verification": true,
           "teacher_note": "광센서로 빛 입사각에 따른 밝기 차이 연계"
@@ -359,11 +718,24 @@
           "id": "6-2-combustion",
           "title": "연소와 소화",
           "achievement_standards": [
-            { "code": "[6과02-04]", "text": "(요약: 연소의 조건과 소화 방법을 안다)" }
+            {
+              "code": "[6과02-04]",
+              "text": "(요약: 연소의 조건과 소화 방법을 안다)"
+            }
           ],
-          "key_concepts": ["연소", "발화점", "산소", "소화"],
-          "linked_sensor_ids": ["flame", "dht11"],
-          "linked_experiment_ids": [],
+          "key_concepts": [
+            "연소",
+            "발화점",
+            "산소",
+            "소화"
+          ],
+          "linked_sensor_ids": [
+            "flame",
+            "dht11"
+          ],
+          "linked_experiment_ids": [
+            "exp-6-flame-detector"
+          ],
           "needs_verification": true,
           "teacher_note": "화염 센서로 불꽃 감지 — 실제 불 사용은 교사 동반 필수"
         },
@@ -371,11 +743,24 @@
           "id": "6-2-human-body",
           "title": "우리 몸의 구조와 기능",
           "achievement_standards": [
-            { "code": "[6과07-01]", "text": "(요약: 뼈·근육·소화·순환·호흡 기관의 기능을 안다)" }
+            {
+              "code": "[6과07-01]",
+              "text": "(요약: 뼈·근육·소화·순환·호흡 기관의 기능을 안다)"
+            }
           ],
-          "key_concepts": ["순환", "심장박동", "호흡", "소화"],
-          "linked_sensor_ids": ["heartbeat", "dht11"],
-          "linked_experiment_ids": ["exp-6-heartbeat"],
+          "key_concepts": [
+            "순환",
+            "심장박동",
+            "호흡",
+            "소화"
+          ],
+          "linked_sensor_ids": [
+            "heartbeat",
+            "dht11"
+          ],
+          "linked_experiment_ids": [
+            "exp-6-heartbeat"
+          ],
           "needs_verification": true,
           "teacher_note": "심박 센서로 운동 전후 심장박동 변화 연계(의료기기 아님 안내)"
         },
@@ -383,11 +768,24 @@
           "id": "6-2-energy",
           "title": "에너지와 생활",
           "achievement_standards": [
-            { "code": "[6과16-01]", "text": "(요약: 에너지의 형태와 전환·효율을 안다)" }
+            {
+              "code": "[6과16-01]",
+              "text": "(요약: 에너지의 형태와 전환·효율을 안다)"
+            }
           ],
-          "key_concepts": ["에너지 형태", "전환", "효율"],
-          "linked_sensor_ids": ["dc-motor", "rgb-led", "photoresistor"],
-          "linked_experiment_ids": ["exp-fusion-self-driving"],
+          "key_concepts": [
+            "에너지 형태",
+            "전환",
+            "효율"
+          ],
+          "linked_sensor_ids": [
+            "dc-motor",
+            "rgb-led",
+            "photoresistor"
+          ],
+          "linked_experiment_ids": [
+            "exp-fusion-self-driving"
+          ],
           "needs_verification": true,
           "teacher_note": "전기에너지→운동/빛에너지 전환을 모터·LED로 시연"
         }
@@ -402,11 +800,29 @@
           "id": "fusion-sw",
           "title": "SW·메이커 교육 (융합)",
           "achievement_standards": [
-            { "code": "(실과/정보 연계)", "text": "(요약: 절차적 사고와 센서-제어 흐름을 이해한다)" }
+            {
+              "code": "(실과/정보 연계)",
+              "text": "(요약: 절차적 사고와 센서-제어 흐름을 이해한다)"
+            }
           ],
-          "key_concepts": ["입력", "처리", "출력", "조건", "자동제어"],
-          "linked_sensor_ids": ["hc-sr04", "tracking", "dc-motor", "avoid-ir"],
-          "linked_experiment_ids": ["exp-fusion-self-driving"],
+          "key_concepts": [
+            "입력",
+            "처리",
+            "출력",
+            "조건",
+            "자동제어"
+          ],
+          "linked_sensor_ids": [
+            "hc-sr04",
+            "tracking",
+            "dc-motor",
+            "avoid-ir"
+          ],
+          "linked_experiment_ids": [
+            "exp-fusion-self-driving",
+            "exp-fusion-servo-gate",
+            "exp-fusion-buzzer-piano"
+          ],
           "needs_verification": true,
           "teacher_note": "5~6학년 실과/정보, 자유학기 연계"
         },
@@ -414,11 +830,24 @@
           "id": "fusion-environment",
           "title": "환경·지속가능 (융합)",
           "achievement_standards": [
-            { "code": "(범교과 연계)", "text": "(요약: 환경 자료를 수집·해석해 문제를 해결한다)" }
+            {
+              "code": "(범교과 연계)",
+              "text": "(요약: 환경 자료를 수집·해석해 문제를 해결한다)"
+            }
           ],
-          "key_concepts": ["환경 데이터", "자동 급수", "지속가능"],
-          "linked_sensor_ids": ["dht11", "photoresistor", "dc-motor"],
-          "linked_experiment_ids": ["exp-fusion-smart-plant"],
+          "key_concepts": [
+            "환경 데이터",
+            "자동 급수",
+            "지속가능"
+          ],
+          "linked_sensor_ids": [
+            "dht11",
+            "photoresistor",
+            "dc-motor"
+          ],
+          "linked_experiment_ids": [
+            "exp-fusion-smart-plant"
+          ],
           "needs_verification": true,
           "teacher_note": "토양습도 센서는 키트에 없어 추가 구매 필요(정전식 권장)"
         }

@@ -6,11 +6,17 @@
 from __future__ import annotations
 
 import json
+import os
+import re
 import uuid
 from datetime import datetime
 
+import httpx
 from fastapi import APIRouter
 from pydantic import BaseModel
+
+OLLAMA_URL = os.environ.get("OLLAMA_URL", "http://localhost:11434")
+VERIFY_MODEL = os.environ.get("SCIENCE_AI_MODEL", "gemma3:1b")
 
 from services import help_signal
 from services.data_loader import store
@@ -154,6 +160,97 @@ async def next_step(session_id: str):
     except Exception:
         pass
     return {"current_step": nxt, "mode": new_mode}
+
+
+# ---------- AI 단계 채점(통과 게이트) ----------
+class VerifyReq(BaseModel):
+    answer: str | None = None
+
+
+def _recent_readings(session_id: str, step_n: int, limit: int = 60) -> list[dict]:
+    with get_conn() as conn:
+        rows = conn.execute(
+            "SELECT sensor_type, value, unit FROM sensor_readings "
+            "WHERE session_id=? AND step_n=? ORDER BY id DESC LIMIT ?",
+            (session_id, step_n, limit),
+        ).fetchall()
+    return [dict(r) for r in rows]
+
+
+def _summarize(readings: list[dict]) -> str:
+    by: dict[str, list[float]] = {}
+    for r in readings:
+        v = r.get("value")
+        if v is not None:
+            by.setdefault(r.get("sensor_type") or "값", []).append(v)
+    parts = []
+    for k, vs in by.items():
+        if vs:
+            parts.append(f"{k}: {len(vs)}회 측정, 최소 {round(min(vs),2)}, 최대 {round(max(vs),2)}, 최근 {round(vs[0],2)}")
+    return " / ".join(parts)
+
+
+def _build_prompt(step: dict, data_str: str, answer: str) -> str:
+    crit = []
+    if step.get("objectives"):
+        crit += step["objectives"]
+    thr = step.get("sensor_thresholds") or {}
+    for sensor, rules in thr.items():
+        for rule in rules:
+            crit.append(f"{sensor} {rule.get('range','')} → {rule.get('scripted','')}")
+    crit_str = "\n".join(f"- {c}" for c in crit) or "- (이 단계의 안내문대로 측정/관찰을 수행)"
+    return (
+        "너는 초등 과학 실험을 돕는 다정한 AI 도우미야. 학생이 '다 했어요'를 눌렀어.\n"
+        "아래 '실제 측정 데이터'와 '학생 설명'을 보고, 이 단계를 제대로 수행했는지 판정해.\n"
+        "엄격하게 점수 매기지 말고, 데이터가 실제로 들어왔고 단계 취지에 맞으면 통과시켜. 격려가 우선이야.\n\n"
+        f"[단계 안내]\n{step.get('instruction_student','')}\n\n"
+        f"[성공 기준]\n{crit_str}\n\n"
+        f"[실제 측정 데이터]\n{data_str or '(데이터 없음)'}\n\n"
+        f"[학생 설명]\n{answer or '(설명 없음)'}\n\n"
+        "반드시 아래 JSON 한 줄로만 답해. 다른 말 금지.\n"
+        '{"pass": true 또는 false, "feedback": "한국어 한두 문장, 통과면 칭찬+한 줄 배운점 확인, 아니면 무엇을 더 해보면 좋을지 힌트"}'
+    )
+
+
+async def _ollama_judge(prompt: str) -> dict:
+    try:
+        async with httpx.AsyncClient(timeout=20) as client:
+            r = await client.post(
+                f"{OLLAMA_URL}/api/generate",
+                json={"model": VERIFY_MODEL, "prompt": prompt, "stream": False,
+                      "options": {"temperature": 0.2}},
+            )
+        txt = (r.json() or {}).get("response", "")
+        m = re.search(r"\{.*\}", txt, re.S)
+        if m:
+            obj = json.loads(m.group(0))
+            return {"pass": bool(obj.get("pass", True)),
+                    "feedback": str(obj.get("feedback", "")).strip(), "source": "llm"}
+        passed = not re.search(r"false|아니|다시|부족", txt)
+        return {"pass": passed, "feedback": txt.strip()[:120], "source": "llm-text"}
+    except Exception:
+        # AI를 못 쓰면 학습을 막지 않는다(통과 + 안내)
+        return {"pass": True, "feedback": "좋아요! 다음으로 넘어가요 👍 (AI 확인은 잠시 쉬는 중)", "source": "fallback"}
+
+
+@router.post("/{session_id}/step/verify")
+async def step_verify(session_id: str, req: VerifyReq = VerifyReq()):
+    """핵심(데이터 수집) 단계에서 실제 센서 데이터+학생 설명을 AI가 보고 통과/재도전 판정."""
+    s = get_session(session_id)
+    if not s:
+        return {"error": "세션을 찾을 수 없어요.", "pass": True}
+    exp_id = s.get("experiment_id") or ""
+    step_n = s.get("current_step") or 0
+    step = store.step_dict(exp_id, step_n) if exp_id else None
+    # 데이터 수집 단계가 아니면 자동 통과(준비/연결 단계는 자율)
+    if not step or step.get("expected_state") != "data_collecting":
+        return {"gated": False, "pass": True}
+    readings = _recent_readings(session_id, step_n)
+    if not readings:
+        return {"gated": True, "pass": False,
+                "feedback": "아직 센서 값이 안 들어왔어요. 센서로 먼저 측정해 볼까요? 📊"}
+    verdict = await _ollama_judge(_build_prompt(step, _summarize(readings), req.answer or ""))
+    return {"gated": True, **verdict}
 
 
 @router.get("/roles/cards")

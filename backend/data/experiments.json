@@ -1,19 +1,21 @@
 [
   {
     "id": "exp-3-magnet-distance",
-    "title": "자석 세기 거리별 측정",
+    "title": "자석의 힘, 거리로 재 보기",
     "grade": 3,
     "unit_id": "3-1-magnet",
     "achievement_codes": [
-      "[4과05-01]"
+      "[4과05-01]",
+      "[4과05-02]"
     ],
     "difficulty": 2,
     "duration_min": 30,
     "required_sensors": [
-      "linear-hall"
+      "analog-hall"
     ],
     "optional_sensors": [
-      "hall-magnetic"
+      "hall-magnetic",
+      "reed-switch"
     ],
     "required_actuators": [],
     "extra_materials": [
@@ -23,23 +25,25 @@
       "점퍼선"
     ],
     "safety_level": "low",
-    "safety_warnings": [],
-    "objectives": [
-      "자석에서 멀어질수록 자기장이 약해짐을 데이터로 확인한다"
+    "safety_warnings": [
+      "자석은 작아서 삼키면 위험해요. 입에 가까이 하지 않아요."
     ],
-    "hypothesis_prompt": "자석과 센서 사이 거리가 멀어지면 자기장은 어떻게 될까요?",
+    "objectives": [
+      "자석에서 멀어질수록 자기장이 약해진다는 것을 데이터(센서 값)로 확인한다"
+    ],
+    "hypothesis_prompt": "자석과 센서 사이가 멀어지면 센서 값은 커질까요, 작아질까요?",
     "steps": [
       {
         "n": 1,
-        "instruction_student": "Linear Hall 센서를 빵판에 꽂고 보드와 연결해요.",
+        "instruction_student": "아날로그 홀(자기) 센서를 빵판에 꽂고 보드에 연결해요. (키트 No.35)",
         "duration_sec": 90,
         "image_path": "/assets/steps/linear-hall-plug.svg",
-        "llm_coach_prompt": "학생에게 '센서 다리(핀)가 휘거나 잘못 꽂히진 않았는지' 스스로 확인하도록 질문하세요.",
+        "llm_coach_prompt": "센서 다리(핀)가 휘거나 빠지지 않았는지 학생 스스로 확인하도록 질문하세요.",
         "expected_state": "sensor_connected",
         "scripted_replies": {
-          "done": "좋아! 🧲 자석을 조금씩 움직이며 값을 살펴보자.",
-          "stuck": "괜찮아, 센서 핀이 잘 꽂혔는지 같이 볼까?",
-          "repeat": "다시! 자석을 센서 가까이 댔다가 천천히 멀리해줘.",
+          "done": "좋아! 🧲 이제 자석을 가까이 댔다가 천천히 멀리해 보자.",
+          "stuck": "괜찮아, 센서 핀 3개가 빵판에 잘 꽂혔는지 같이 볼까?",
+          "repeat": "다시! 센서를 보드에 연결하고 화면에 값이 뜨는지 확인해줘.",
           "timer_80": "거의 다 됐어! 조금만 더 ⏳",
           "timer_end": "시간 다 됐어. 다 했으면 ✅ 눌러줘."
         },
@@ -47,15 +51,15 @@
       },
       {
         "n": 2,
-        "instruction_student": "자석을 센서 위 1cm 거리에 두고 값을 읽어요.",
+        "instruction_student": "자석을 센서 바로 위 1cm에 두고, 화면의 값을 살펴봐요.",
         "duration_sec": 60,
         "image_path": "/assets/steps/magnet-1cm.svg",
-        "llm_coach_prompt": "지금 화면의 값이 평소(자석 없을 때)와 어떻게 다른지 학생이 말로 표현하게 유도하세요.",
+        "llm_coach_prompt": "자석을 댔을 때와 떼었을 때 값이 어떻게 달라지는지 학생이 말로 표현하게 유도하세요.",
         "expected_state": "data_collecting",
         "scripted_replies": {
-          "done": "좋아! 🧲 자석을 조금씩 움직이며 값을 살펴보자.",
-          "stuck": "괜찮아, 센서 핀이 잘 꽂혔는지 같이 볼까?",
-          "repeat": "다시! 자석을 센서 가까이 댔다가 천천히 멀리해줘.",
+          "done": "좋아! 값을 기억해 두고, 이번엔 더 멀리 해 보자.",
+          "stuck": "자석의 면을 센서 쪽으로 평평하게 가까이 대 줘.",
+          "repeat": "다시! 자석을 1cm 거리에 두고 값을 읽어줘.",
           "timer_80": "거의 다 됐어! 조금만 더 ⏳",
           "timer_end": "시간 다 됐어. 다 했으면 ✅ 눌러줘."
         },
@@ -63,15 +67,15 @@
       },
       {
         "n": 3,
-        "instruction_student": "자석을 2cm, 5cm, 10cm로 점점 멀리하며 값을 기록해요.",
+        "instruction_student": "자석을 2cm → 5cm → 10cm로 점점 멀리하며 값을 기록해요.",
         "duration_sec": 180,
         "image_path": "/assets/steps/magnet-far.svg",
-        "llm_coach_prompt": "'거리가 멀어질 때 값이 커졌나요, 작아졌나요?' 라고 물어 변화의 방향을 학생이 스스로 발견하게 하세요.",
+        "llm_coach_prompt": "'거리가 멀어질 때 값이 커졌나요, 작아졌나요?'라고 물어 변화의 방향을 학생이 스스로 발견하게 하세요.",
         "expected_state": "data_collecting",
         "scripted_replies": {
-          "done": "좋아! 🧲 자석을 조금씩 움직이며 값을 살펴보자.",
-          "stuck": "괜찮아, 센서 핀이 잘 꽂혔는지 같이 볼까?",
-          "repeat": "다시! 자석을 센서 가까이 댔다가 천천히 멀리해줘.",
+          "done": "잘했어! 멀어질수록 값이 줄었지? 자기장이 약해진 거야 ✨",
+          "stuck": "괜찮아, 같은 자석으로 거리만 바꿔서 값을 비교해 줘.",
+          "repeat": "다시! 가까이 → 멀리 순서로 천천히 옮기며 값을 봐줘.",
           "timer_80": "거의 다 됐어! 조금만 더 ⏳",
           "timer_end": "시간 다 됐어. 다 했으면 ✅ 눌러줘."
         },
@@ -83,11 +87,11 @@
             },
             {
               "range": "350 ~ 650",
-              "scripted": "보통 세기야."
+              "scripted": "보통 세기야. 조금 더 멀리해 볼까?"
             },
             {
               "range": "< 350",
-              "scripted": "자석이 멀어서 신호가 약해 ✨"
+              "scripted": "자석이 멀어서 신호가 약해졌어 ✨"
             }
           ]
         },
@@ -100,11 +104,11 @@
       "y_axis": "자기장 세기(센서 값)"
     },
     "post_questions": [
-      "거리가 2배가 되면 자기장은 어떻게 변했나요?",
-      "자석이 손에 닿지 않는데 왜 센서가 반응할까요?"
+      "거리가 2배가 되면 자기장 세기는 어떻게 변했나요?",
+      "자석이 손에 닿지 않는데 왜 센서가 반응했을까요?"
     ],
     "report_template_id": "report-basic",
-    "llm_system_prompt_addon": "이 실험에서는 '자기장'이라는 단어를 처음 도입한다. 눈에 보이지 않는 힘이라는 점을 강조하고, 어려운 수식은 쓰지 마라."
+    "llm_system_prompt_addon": "이 실험에서 '자기장'을 처음 도입한다. 눈에 보이지 않는 힘이라는 점을 강조하고 수식은 쓰지 마라. 키트의 아날로그 홀 센서(No.35)를 사용한다."
   },
   {
     "id": "exp-3-sound-clap",
@@ -766,82 +770,81 @@
     "difficulty": 3,
     "duration_min": 35,
     "required_sensors": [
-      "heartbeat"
+      "tap"
     ],
-    "optional_sensors": [],
+    "optional_sensors": [
+      "big-sound"
+    ],
     "required_actuators": [],
     "extra_materials": [
-      "제자리 뛰기 공간"
+      "제자리 뛰기 공간",
+      "초시계(화면 타이머 사용 가능)"
     ],
     "safety_level": "low",
     "safety_warnings": [
-      "몸이 불편한 친구는 무리해서 뛰지 않아요. 이 센서는 의료기기가 아니에요."
+      "몸이 불편한 친구는 무리해서 뛰지 않아요.",
+      "이 활동은 의료 측정이 아니라 '경향'을 살펴보는 과학 활동이에요."
     ],
     "objectives": [
-      "운동 전과 후의 심장박동 변화를 측정해 우리 몸의 순환을 이해한다"
+      "맥박을 두드림 센서로 세어 보고, 운동 전과 후의 심장박동 변화를 데이터로 비교한다"
     ],
-    "hypothesis_prompt": "제자리 뛰기를 하고 나면 심장박동은 어떻게 변할까요?",
+    "hypothesis_prompt": "제자리 뛰기를 하고 나면 1분 동안 심장은 더 많이 뛸까요, 적게 뛸까요?",
     "steps": [
       {
         "n": 1,
-        "instruction_student": "손가락을 심박 센서에 살짝 대고 쉬는 상태의 박동을 측정해요.",
+        "instruction_student": "손목이나 목에서 맥박을 찾아, 뛰는 박자에 맞춰 두드림 센서를 '톡톡' 쳐요. 15초 동안 세어 봐요. (키트 No.36)",
         "duration_sec": 90,
         "image_path": "/assets/steps/heartbeat-rest.svg",
-        "llm_coach_prompt": "손가락을 너무 세게 누르면 신호가 약해진다는 걸 학생이 직접 느껴보게 질문하세요.",
-        "expected_state": "sensor_connected",
+        "llm_coach_prompt": "맥박이 잘 안 느껴지면 손가락 두 개로 손목 안쪽을 가볍게 눌러보게 안내하세요. 숫자를 강요하지 말고 '느낌'을 먼저 묻기.",
+        "expected_state": "data_collecting",
         "scripted_replies": {
-          "done": "좋아! 💗 손가락을 살짝 대고 박동을 느껴보자.",
-          "stuck": "손가락을 너무 세게 누르지 말고 살짝 대줘.",
-          "repeat": "다시! 손가락을 심박 센서에 살짝 대줘.",
+          "done": "좋아! 쉬는 상태의 박자를 기억해 두자. 이제 몸을 움직여 볼까? 🏃",
+          "stuck": "괜찮아. 맥박이 느껴지는 곳을 먼저 찾고, 그 박자대로 센서를 톡톡 쳐줘.",
+          "repeat": "다시! 맥박 한 번에 센서 한 번, 15초 동안 세어줘.",
           "timer_80": "거의 다 됐어! 조금만 더 ⏳",
           "timer_end": "시간 다 됐어. 다 했으면 ✅ 눌러줘."
+        },
+        "sensor_thresholds": {
+          "tap": [
+            {
+              "range": "== 1",
+              "scripted": "톡! 박자가 잘 들어오고 있어 💗"
+            }
+          ]
         },
         "llm_trigger_examples": []
       },
       {
         "n": 2,
-        "instruction_student": "30초 동안 제자리 뛰기를 한 뒤 다시 측정해요.",
+        "instruction_student": "30초 동안 제자리 뛰기를 한 뒤, 다시 맥박 박자대로 15초간 두드려요.",
         "duration_sec": 120,
         "image_path": "/assets/steps/heartbeat-exercise.svg",
-        "llm_coach_prompt": "'운동 후 박동이 빨라졌나요? 왜 그럴까요?' 라고 물어 산소·순환과 연결하게 하세요.",
+        "llm_coach_prompt": "'운동 후 박자가 빨라졌나요? 왜 그럴까요?'라고 물어 산소와 혈액 순환으로 자연스럽게 연결하세요.",
         "expected_state": "data_collecting",
         "scripted_replies": {
-          "done": "좋아! 💗 손가락을 살짝 대고 박동을 느껴보자.",
-          "stuck": "손가락을 너무 세게 누르지 말고 살짝 대줘.",
-          "repeat": "다시! 손가락을 심박 센서에 살짝 대줘.",
+          "done": "잘했어! 운동 후엔 더 빨라졌지? 우리 몸이 산소를 더 보내려고 그런 거야 💗",
+          "stuck": "숨이 차면 잠깐 쉬어도 돼. 준비되면 다시 박자를 세어줘.",
+          "repeat": "다시! 가볍게 움직인 뒤 맥박 박자대로 두드려줘.",
           "timer_80": "거의 다 됐어! 조금만 더 ⏳",
           "timer_end": "시간 다 됐어. 다 했으면 ✅ 눌러줘."
         },
-        "sensor_thresholds": {
-          "heartbeat": [
-            {
-              "range": "> 120",
-              "scripted": "심장이 빨리 뛰어! 운동했구나 🏃"
-            },
-            {
-              "range": "60 ~ 120",
-              "scripted": "평소 심장박동이야 💗"
-            },
-            {
-              "range": "< 60",
-              "scripted": "천천히 다시 측정해볼까?"
-            }
-          ]
-        },
-        "llm_trigger_examples": []
+        "llm_trigger_examples": [
+          "운동하면 왜 심장이 빨라져요?",
+          "심장은 무슨 일을 해요?"
+        ]
       }
     ],
     "data_visualization": {
       "type": "bar_chart",
-      "x_axis": "운동 전/후",
-      "y_axis": "분당 심장박동 수(추정)"
+      "x_axis": "운동 전 / 후",
+      "y_axis": "15초 동안 박자 수"
     },
     "post_questions": [
-      "운동 후 심장이 빨라진 이유는 무엇일까요?",
-      "심장은 우리 몸에서 무슨 일을 하나요?"
+      "운동 후 심장이 빨라진 까닭은 무엇일까요?",
+      "심장이 빨리 뛸 때 우리 몸에는 무엇이 더 필요할까요?"
     ],
     "report_template_id": "report-comparison",
-    "llm_system_prompt_addon": "심박 센서는 의료기기가 아님을 명확히 하라. 운동을 무리하게 권하지 말고, 경향(빨라짐) 관찰에 집중하라."
+    "llm_system_prompt_addon": "의료 측정이 아님을 분명히 하라. 정확한 분당 수치보다 '운동 후 빨라진다'는 경향 관찰에 집중하라. 키트의 두드림(탭) 센서로 맥박 박자를 센다. 무리한 운동을 권하지 마라."
   },
   {
     "id": "exp-6-color-mixing",
@@ -1279,7 +1282,7 @@
   },
   {
     "id": "exp-fusion-smart-plant",
-    "title": "스마트 화분 자동 급수기",
+    "title": "스마트 화분 지킴이",
     "grade": 0,
     "unit_id": "fusion-environment",
     "achievement_codes": [
@@ -1288,93 +1291,926 @@
     "difficulty": 4,
     "duration_min": 45,
     "required_sensors": [
-      "soil-moisture"
+      "dht11",
+      "photoresistor"
     ],
     "optional_sensors": [
-      "dht11"
+      "analog-temp"
     ],
     "required_actuators": [
-      "dc-motor"
+      "servo"
     ],
     "extra_materials": [
-      "작은 물 펌프(또는 DC모터+호스)",
-      "모터드라이버",
-      "외부 전원",
-      "화분·흙·식물",
-      "물통"
+      "화분·흙·식물(또는 모형)",
+      "작은 종이 그늘막(서보에 부착)"
     ],
-    "safety_level": "medium",
+    "safety_level": "low",
     "safety_warnings": [
-      "물과 전자 부품이 닿지 않게 펌프·호스만 물에 넣고 보드는 멀리 둬요.",
-      "모터(펌프)는 드라이버를 거쳐 연결해요.",
-      "젖은 손으로 전선·보드를 만지지 않아요."
+      "물은 센서·보드에 직접 닿지 않게 해요.",
+      "서보 날개가 손가락을 끼지 않게 천천히 움직여요."
     ],
     "objectives": [
-      "흙이 마르면 자동으로 물을 주는 시스템을 만들어 환경 데이터로 식물을 돌본다"
+      "빛과 온·습도 데이터를 읽어, 식물이 편안한 환경인지 판단하고 서보로 자동 그늘막을 여닫는다"
     ],
-    "hypothesis_prompt": "흙이 얼마나 마르면 물을 주면 식물에게 좋을까요?",
+    "hypothesis_prompt": "식물에게 좋은 환경인지 무엇(빛·온도·습도)을 보면 알 수 있을까요?",
     "steps": [
       {
         "n": 1,
-        "instruction_student": "토양 습도 센서를 흙에 꽂고, 마른 흙과 젖은 흙의 값을 비교해요.",
+        "instruction_student": "조도(빛) 센서와 온습도 센서(DHT11)를 화분 옆에 두고, 밝을 때와 어두울 때 값을 비교해요. (No.12, No.29)",
         "duration_sec": 150,
-        "image_path": "/assets/steps/soil-sensor.svg",
-        "llm_coach_prompt": "마른 흙과 젖은 흙 중 어느 쪽 값이 큰지 학생이 먼저 예상하고 확인하게 질문하세요.",
+        "image_path": "/assets/steps/light-bright.svg",
+        "llm_coach_prompt": "밝게/어둡게 만들었을 때 어떤 값이 변하는지 학생이 먼저 예상하고 확인하게 질문하세요.",
         "expected_state": "sensor_connected",
         "scripted_replies": {
-          "done": "좋아! 마른 흙과 젖은 흙 값이 달랐지? 이제 펌프를 연결하자 💧",
-          "stuck": "괜찮아. 센서의 금속(또는 패드) 부분만 흙에 쏙 꽂아줘.",
-          "repeat": "다시! 센서를 마른 흙 → 젖은 흙 순서로 꽂아 값을 비교해줘.",
-          "timer_80": "30초 남았어 ⏳",
-          "timer_end": "다 했으면 ✅"
-        },
-        "sensor_thresholds": {},
-        "llm_trigger_examples": [
-          "왜 젖은 흙은 값이 작아요?",
-          "센서가 녹슬어요?"
-        ]
-      },
-      {
-        "n": 2,
-        "instruction_student": "흙이 마르면 펌프가 물을 주도록 기준값을 정하고 확인해요.",
-        "duration_sec": 180,
-        "image_path": "/assets/steps/auto-water.svg",
-        "llm_coach_prompt": "'물을 너무 자주 주면 식물에 안 좋을 수도 있어요. 기준을 어떻게 정하면 좋을까?' 라고 물어 적정 급수를 생각하게 하세요.",
-        "expected_state": "data_collecting",
-        "scripted_replies": {
-          "done": "자동 급수 완성! 🌱 흙이 마르면 똑똑하게 물을 주네!",
-          "stuck": "펌프가 안 돌면 외부 전원과 드라이버 연결을 확인해줘 🔋",
-          "repeat": "흙을 살짝 말려보거나 센서를 빼서 '마름' 상태를 만들어봐.",
-          "timer_end": "실험 끝! 결과를 정리하자 ✅"
+          "done": "좋아! 빛과 온·습도가 데이터로 보이지? 이제 자동 그늘막을 달아 보자 🌿",
+          "stuck": "괜찮아. 센서 위를 손으로 가려 '어둡게' 만들어 보면 값이 확 변할 거야.",
+          "repeat": "다시! 밝을 때 → 어두울 때 순서로 값을 비교해줘.",
+          "timer_80": "거의 다 됐어! 조금만 더 ⏳",
+          "timer_end": "시간 다 됐어. 다 했으면 ✅ 눌러줘."
         },
         "sensor_thresholds": {
-          "soil_moisture": [
+          "photoresistor": [
             {
-              "range": "dry",
-              "scripted": "🌵 흙이 말랐어요! 펌프 작동 💧"
+              "range": "> 700",
+              "scripted": "☀️ 아주 밝아요! 식물이 햇빛을 잘 받고 있어요."
             },
             {
-              "range": "wet",
-              "scripted": "🌱 흙이 촉촉해요. 물은 그만!"
+              "range": "300 ~ 700",
+              "scripted": "적당한 밝기예요 🌿"
+            },
+            {
+              "range": "< 300",
+              "scripted": "🌑 너무 어두워요. 빛이 더 필요할지도?"
             }
           ]
         },
+        "llm_trigger_examples": []
+      },
+      {
+        "n": 2,
+        "instruction_student": "서보모터에 작은 그늘막을 붙이고, 너무 밝고 더우면 그늘막을 펴도록 기준을 정해 확인해요. (서보 No.09)",
+        "duration_sec": 180,
+        "image_path": "/assets/steps/auto-light-wire.svg",
+        "llm_coach_prompt": "'그늘막을 언제 펴면 좋을까? 너무 자주 여닫으면 어떨까?'라고 물어 적절한 기준값을 스스로 정하게 하세요.",
+        "expected_state": "data_collecting",
+        "scripted_replies": {
+          "done": "스마트 화분 완성! 🌱 햇빛이 강하면 그늘막이 척! 환경을 데이터로 돌봤어.",
+          "stuck": "서보가 안 움직이면 신호선·전원 연결을 확인하고, 기준값을 다시 정해줘.",
+          "repeat": "센서를 밝게/어둡게 바꿔 그늘막이 여닫히는지 확인해줘.",
+          "timer_80": "거의 다 됐어! 조금만 더 ⏳",
+          "timer_end": "시간 다 됐어. 다 했으면 ✅ 눌러줘."
+        },
         "llm_trigger_examples": [
-          "물을 너무 많이 주면 어떻게 돼요?",
-          "선인장도 이렇게 키워요?"
+          "빛이 너무 세면 식물에 안 좋아요?",
+          "그늘막 대신 물을 줄 수도 있어요?"
         ]
       }
     ],
     "data_visualization": {
       "type": "line_chart",
       "x_axis": "시간(분)",
-      "y_axis": "토양 습도(센서 값)"
+      "y_axis": "밝기(조도 센서 값)"
     },
     "post_questions": [
-      "식물에게 물이 필요한지 무엇을 보고 알 수 있었나요?",
-      "자동 급수기가 농장에서 어떻게 쓰일 수 있을까요?"
+      "식물에게 좋은 환경을 어떤 데이터로 판단했나요?",
+      "이 자동 시스템을 농장이나 베란다에서 어떻게 쓸 수 있을까요?"
     ],
     "report_template_id": "report-control",
-    "llm_system_prompt_addon": "융합(환경). 토양 습도 센서는 키트 미포함이라 사전 준비가 필요함을 교사 노트에 둔다. 과습의 해로움(뿌리 썩음)을 쉽게 언급하고, 환경 데이터로 생명을 돌보는 의미를 강조하라."
+    "llm_system_prompt_addon": "융합(환경·SW). 키트 전용으로 토양 센서·물펌프 없이 빛·온습도·서보로 구성한다. 환경 데이터로 생명을 돌보는 의미와 적정 자동화(너무 자주 작동하지 않기)를 강조하라."
+  },
+  {
+    "id": "exp-6-electric-signal",
+    "title": "전기로 만드는 신호등과 경보기",
+    "grade": 6,
+    "unit_id": "6-2-electricity",
+    "achievement_codes": [
+      "[6과10-01]",
+      "[6과10-02]"
+    ],
+    "difficulty": 3,
+    "duration_min": 35,
+    "required_sensors": [
+      "button"
+    ],
+    "optional_sensors": [
+      "touch"
+    ],
+    "required_actuators": [
+      "two-color-led",
+      "active-buzzer"
+    ],
+    "extra_materials": [
+      "빵판",
+      "점퍼선"
+    ],
+    "safety_level": "low",
+    "safety_warnings": [
+      "전선을 입에 대지 않고, 보드는 물기 없는 곳에서 다뤄요."
+    ],
+    "objectives": [
+      "버튼으로 전기 회로를 여닫아 LED와 부저를 제어하며, 전기가 흐를 때만 빛·소리가 난다는 것을 이해한다"
+    ],
+    "hypothesis_prompt": "버튼을 누르면(회로가 연결되면) LED와 부저는 어떻게 될까요?",
+    "steps": [
+      {
+        "n": 1,
+        "instruction_student": "버튼과 2색 LED를 빵판에 연결하고, 버튼을 누를 때 LED가 켜지는지 확인해요. (No.22, No.15)",
+        "duration_sec": 150,
+        "image_path": "/assets/steps/rgb-red.svg",
+        "llm_coach_prompt": "'버튼을 누르면 회로가 어떻게 바뀌어서 불이 켜질까?'라고 물어 '열린 회로/닫힌 회로' 개념으로 연결하세요.",
+        "expected_state": "sensor_connected",
+        "scripted_replies": {
+          "done": "좋아! 버튼을 누르니 불이 켜졌지? 회로가 연결된 거야 🔌 이제 경보음을 더하자.",
+          "stuck": "괜찮아. 버튼의 두 다리와 LED가 같은 줄에 연결됐는지 같이 보자.",
+          "repeat": "다시! 버튼을 눌렀다 뗐다 하며 LED가 켜지고 꺼지는지 봐줘.",
+          "timer_80": "거의 다 됐어! 조금만 더 ⏳",
+          "timer_end": "시간 다 됐어. 다 했으면 ✅ 눌러줘."
+        },
+        "sensor_thresholds": {
+          "button": [
+            {
+              "range": "== 1",
+              "scripted": "🟢 버튼 ON! 회로가 연결돼 불이 켜졌어."
+            },
+            {
+              "range": "== 0",
+              "scripted": "🔴 버튼 OFF. 회로가 끊겨 불이 꺼졌어."
+            }
+          ]
+        },
+        "llm_trigger_examples": []
+      },
+      {
+        "n": 2,
+        "instruction_student": "능동 부저를 더해, 빨간불일 때 '삐-' 소리가 나는 건널목 신호등을 만들어요. (부저 No.26)",
+        "duration_sec": 180,
+        "image_path": "/assets/steps/shock-buzzer.svg",
+        "llm_coach_prompt": "'신호등에 소리를 더하면 누구에게 도움이 될까?'라고 물어 배리어프리(약자 배려)로 확장하세요.",
+        "expected_state": "data_collecting",
+        "scripted_replies": {
+          "done": "멋진 신호등 완성! 🚦 빛과 소리를 전기로 척척 조절했어.",
+          "stuck": "부저가 안 울리면 +/− 방향과 신호선 연결을 확인해줘.",
+          "repeat": "버튼을 눌러 초록 → 빨강으로 바꿔 소리가 나는지 확인해줘.",
+          "timer_80": "거의 다 됐어! 조금만 더 ⏳",
+          "timer_end": "시간 다 됐어. 다 했으면 ✅ 눌러줘."
+        },
+        "llm_trigger_examples": [
+          "부저는 왜 소리가 나요?",
+          "LED 색은 어떻게 바꿔요?"
+        ]
+      }
+    ],
+    "data_visualization": {
+      "type": "line_chart",
+      "x_axis": "시간(초)",
+      "y_axis": "버튼 상태(0/1)"
+    },
+    "post_questions": [
+      "전기가 흐를 때와 흐르지 않을 때, 무엇이 달랐나요?",
+      "소리가 나는 신호등은 어떤 사람에게 도움이 될까요?"
+    ],
+    "report_template_id": "report-basic",
+    "llm_system_prompt_addon": "전기의 이용(6학년). 열린 회로/닫힌 회로, 전기로 빛·소리를 제어한다는 개념을 쉽게 다뤄라. 키트의 버튼·2색 LED·능동 부저만 사용한다. 220V 같은 가정용 전기는 절대 다루지 않는다."
+  },
+  {
+    "id": "exp-4-quake-alarm",
+    "title": "흔들림을 잡아라! 지진 감지 경보기",
+    "grade": 4,
+    "unit_id": "4-2-volcano-quake",
+    "achievement_codes": [
+      "[4과13-01]"
+    ],
+    "difficulty": 2,
+    "duration_min": 30,
+    "required_sensors": [
+      "tilt-mercury"
+    ],
+    "optional_sensors": [
+      "shock"
+    ],
+    "required_actuators": [
+      "active-buzzer"
+    ],
+    "extra_materials": [
+      "흔들 수 있는 받침(책받침·작은 상자)"
+    ],
+    "safety_level": "low",
+    "safety_warnings": [
+      "기울기 센서 안에는 작은 금속이 들어 있어요. 부수거나 입에 대지 않아요."
+    ],
+    "objectives": [
+      "기울기·충격 센서로 흔들림을 감지해 경보를 울리는 지진 감지기를 만들고, 지진 대비의 의미를 안다"
+    ],
+    "hypothesis_prompt": "센서를 흔들면(기울이면) 값은 어떻게 바뀌고, 경보는 언제 울려야 할까요?",
+    "steps": [
+      {
+        "n": 1,
+        "instruction_student": "기울기 센서를 받침에 올리고, 가만히 둘 때와 흔들 때 값을 비교해요. (No.11)",
+        "duration_sec": 120,
+        "image_path": "/assets/steps/shake-table.svg",
+        "llm_coach_prompt": "'가만히 둘 때'와 '흔들 때'를 학생이 직접 만들어 값의 차이를 발견하게 하세요.",
+        "expected_state": "sensor_connected",
+        "scripted_replies": {
+          "done": "좋아! 흔들 때 값이 바뀌는 걸 찾았지? 이제 경보음을 붙여 보자 🚨",
+          "stuck": "괜찮아. 센서를 천천히 기울였다 세웠다 하며 값을 봐줘.",
+          "repeat": "다시! 가만히 → 흔들기 순서로 값을 비교해줘.",
+          "timer_80": "거의 다 됐어! 조금만 더 ⏳",
+          "timer_end": "시간 다 됐어. 다 했으면 ✅ 눌러줘."
+        },
+        "sensor_thresholds": {
+          "tilt": [
+            {
+              "range": "== 1",
+              "scripted": "흔들림 감지! 값이 바뀌었어 🌍"
+            },
+            {
+              "range": "== 0",
+              "scripted": "지금은 안정적이야."
+            }
+          ]
+        },
+        "llm_trigger_examples": []
+      },
+      {
+        "n": 2,
+        "instruction_student": "흔들림이 감지되면 부저가 울리도록 만들고, 살살/세게 흔들어 시험해요.",
+        "duration_sec": 150,
+        "image_path": "/assets/steps/shock-buzzer.svg",
+        "llm_coach_prompt": "'경보가 너무 자주 울리면 어떨까? 기준을 어떻게 정할까?'라고 물어 오작동과 기준값을 생각하게 하세요.",
+        "expected_state": "data_collecting",
+        "scripted_replies": {
+          "done": "지진 감지기 완성! 🚨 흔들리면 경보가 울려 위험을 알려줘.",
+          "stuck": "부저가 안 울리면 연결을 확인하고, 더 크게 흔들어봐.",
+          "repeat": "센서를 흔들어 경보가 울리고, 멈추면 조용해지는지 확인해줘.",
+          "timer_80": "거의 다 됐어! 조금만 더 ⏳",
+          "timer_end": "시간 다 됐어. 다 했으면 ✅ 눌러줘."
+        },
+        "llm_trigger_examples": [
+          "진짜 지진도 이렇게 감지해요?",
+          "센서를 더 민감하게 할 수 있어요?"
+        ]
+      }
+    ],
+    "data_visualization": {
+      "type": "line_chart",
+      "x_axis": "시간(초)",
+      "y_axis": "흔들림(0/1)"
+    },
+    "post_questions": [
+      "경보가 울리는 기준을 어떻게 정했나요?",
+      "지진을 미리 감지하면 우리는 무엇을 할 수 있을까요?"
+    ],
+    "report_template_id": "report-basic",
+    "llm_system_prompt_addon": "화산과 지진(4학년). 기울기/충격 센서로 흔들림을 감지하는 경보기를 만든다. 키트의 기울기 센서·능동 부저만 사용. 지진 대비(머리 보호·튼튼한 곳)와 연결하되 공포감은 주지 마라."
+  },
+  {
+    "id": "exp-fusion-servo-gate",
+    "title": "다가오면 열려요! 서보 자동 차단기",
+    "grade": 0,
+    "unit_id": "fusion-sw",
+    "achievement_codes": [
+      "(실과/정보 연계)"
+    ],
+    "difficulty": 4,
+    "duration_min": 45,
+    "required_sensors": [
+      "hc-sr04"
+    ],
+    "optional_sensors": [
+      "avoid-ir"
+    ],
+    "required_actuators": [
+      "servo"
+    ],
+    "extra_materials": [
+      "종이 차단기(서보 날개에 부착)",
+      "빵판",
+      "점퍼선"
+    ],
+    "safety_level": "low",
+    "safety_warnings": [
+      "서보가 움직일 때 손가락이 끼지 않게 조심해요.",
+      "센서·서보 전선을 잡아당기지 않아요."
+    ],
+    "objectives": [
+      "초음파로 거리(가까움)를 감지하면 서보가 차단기를 자동으로 여는 시스템을 설계·코딩한다"
+    ],
+    "hypothesis_prompt": "물체가 얼마나 가까이 오면 차단기를 열어야 안전하고 편리할까요?",
+    "steps": [
+      {
+        "n": 1,
+        "instruction_student": "초음파 거리 센서(HC-SR04)로 손이 다가올 때 거리 값이 줄어드는지 확인해요. (No.08)",
+        "duration_sec": 150,
+        "image_path": "/assets/steps/ultrasonic-setup.svg",
+        "llm_coach_prompt": "거리가 가까울 때와 멀 때 값이 어떻게 변하는지 학생이 먼저 말해보게 하세요.",
+        "expected_state": "sensor_connected",
+        "scripted_replies": {
+          "done": "좋아! 가까우면 값이 작아지지? 이제 서보로 차단기를 달아 보자 🚧",
+          "stuck": "괜찮아. 센서 앞이 막히지 않게 하고 손을 천천히 가까이/멀리 해줘.",
+          "repeat": "다시! 손을 가까이 → 멀리 옮기며 거리 값을 봐줘.",
+          "timer_80": "거의 다 됐어! 조금만 더 ⏳",
+          "timer_end": "시간 다 됐어. 다 했으면 ✅ 눌러줘."
+        },
+        "sensor_thresholds": {
+          "distance": [
+            {
+              "range": "< 10",
+              "scripted": "🚧 가까워요! 차단기를 열 시간."
+            },
+            {
+              "range": "10 ~ 30",
+              "scripted": "다가오는 중이에요 👀"
+            },
+            {
+              "range": "> 30",
+              "scripted": "아직 멀어요. 차단기는 닫힘."
+            }
+          ]
+        },
+        "llm_trigger_examples": []
+      },
+      {
+        "n": 2,
+        "instruction_student": "정해진 거리보다 가까워지면 서보가 차단기를 열고, 멀어지면 닫도록 만들어요. (서보 No.09)",
+        "duration_sec": 180,
+        "image_path": "/assets/steps/door-build.svg",
+        "llm_coach_prompt": "'너무 멀리서 열리면? 너무 가까워야 열리면?' 기준 거리의 적절함을 스스로 정하게 하세요.",
+        "expected_state": "data_collecting",
+        "scripted_replies": {
+          "done": "자동 차단기 완성! 🚗 다가오면 척 열리고 지나가면 닫혀. 멋진 자동화야!",
+          "stuck": "서보가 안 움직이면 신호선·전원과 기준 거리값을 확인해줘.",
+          "repeat": "손을 기준 거리 안/밖으로 옮겨 차단기가 여닫히는지 확인해줘.",
+          "timer_80": "거의 다 됐어! 조금만 더 ⏳",
+          "timer_end": "시간 다 됐어. 다 했으면 ✅ 눌러줘."
+        },
+        "llm_trigger_examples": [
+          "주차장 차단기도 이래요?",
+          "사람이 끼면 어떻게 멈춰요?"
+        ]
+      }
+    ],
+    "data_visualization": {
+      "type": "line_chart",
+      "x_axis": "시간(초)",
+      "y_axis": "거리(cm)"
+    },
+    "post_questions": [
+      "차단기를 여는 기준 거리를 왜 그렇게 정했나요?",
+      "이런 자동 장치는 우리 생활 어디에서 볼 수 있나요?"
+    ],
+    "report_template_id": "report-control",
+    "llm_system_prompt_addon": "융합(SW·실과). 초음파 거리 센서와 서보모터로 '가까우면 열림' 자동 차단기를 만든다. 키트의 HC-SR04·서보만 사용. 입력(거리)→판단(기준)→출력(서보) 흐름과 안전(끼임 방지)을 강조하라."
+  },
+  {
+    "id": "exp-3-incubator",
+    "title": "🐣 병아리 부화기 온도 지킴이",
+    "grade": 3,
+    "unit_id": "3-1-animal-lifecycle",
+    "achievement_codes": [
+      "[4과03-01]"
+    ],
+    "difficulty": 2,
+    "duration_min": 30,
+    "required_sensors": [
+      "dht11"
+    ],
+    "optional_sensors": [
+      "analog-temp"
+    ],
+    "required_actuators": [
+      "active-buzzer"
+    ],
+    "extra_materials": [
+      "작은 상자(부화기 모형)",
+      "따뜻한 물주머니 또는 손"
+    ],
+    "safety_level": "low",
+    "safety_warnings": [
+      "뜨거운 물은 어른과 함께 다뤄요."
+    ],
+    "objectives": [
+      "알이 잘 자라는 따뜻한 온도를 데이터로 확인하고, 온도가 낮아지면 알려주는 부화기를 만든다"
+    ],
+    "hypothesis_prompt": "병아리 알은 몇 도쯤이 가장 좋을까요? 온도가 떨어지면 어떻게 알 수 있을까요?",
+    "steps": [
+      {
+        "n": 1,
+        "instruction_student": "온습도 센서(DHT11)를 상자 안에 넣고, 손으로 따뜻하게/식게 만들며 온도 값을 살펴봐요. (No.29)",
+        "duration_sec": 120,
+        "image_path": "/assets/steps/warm-cup.svg",
+        "llm_coach_prompt": "따뜻할 때와 식을 때 값이 어떻게 변하는지 학생이 먼저 예상하고 확인하게 하세요.",
+        "expected_state": "sensor_connected",
+        "scripted_replies": {
+          "done": "좋아! 온도가 오르내리는 게 보이지? 이제 '너무 차가우면 삐!' 알림을 달아 보자.",
+          "stuck": "괜찮아. 센서를 손으로 감싸 따뜻하게 만들어 값이 오르는지 봐줘.",
+          "repeat": "다시! 따뜻할 때 → 식을 때 순서로 온도를 비교해줘.",
+          "timer_80": "거의 다 됐어! 조금만 더 ⏳",
+          "timer_end": "시간 다 됐어. 다 했으면 ✅ 눌러줘."
+        },
+        "llm_trigger_examples": [],
+        "sensor_thresholds": {
+          "temperature": [
+            {
+              "range": ">= 37",
+              "scripted": "🐣 알이 좋아하는 따뜻한 온도예요!"
+            },
+            {
+              "range": "30 ~ 37",
+              "scripted": "조금 더 따뜻하게 해 줄까요?"
+            },
+            {
+              "range": "< 30",
+              "scripted": "🥶 너무 차가워요! 알이 추워해요."
+            }
+          ]
+        }
+      },
+      {
+        "n": 2,
+        "instruction_student": "온도가 정한 기준보다 낮아지면 부저가 울리도록 만들고, 식혀서 시험해요.",
+        "duration_sec": 150,
+        "image_path": "/assets/steps/shock-buzzer.svg",
+        "llm_coach_prompt": "'알을 잘 키우려면 기준 온도를 몇 도로 정하면 좋을까?'라고 물어 적정 온도를 생각하게 하세요.",
+        "expected_state": "data_collecting",
+        "scripted_replies": {
+          "done": "부화기 완성! 🐣 추워지면 삐- 하고 알려줘서 알을 지킬 수 있어.",
+          "stuck": "부저가 안 울리면 연결을 확인하고 기준 온도를 다시 정해줘.",
+          "repeat": "센서를 식혀서 경보가 울리는지 확인해줘.",
+          "timer_80": "거의 다 됐어! 조금만 더 ⏳",
+          "timer_end": "시간 다 됐어. 다 했으면 ✅ 눌러줘."
+        },
+        "llm_trigger_examples": [
+          "병아리는 며칠 만에 나와요?",
+          "온도가 너무 높으면 어떻게 돼요?"
+        ]
+      }
+    ],
+    "data_visualization": {
+      "type": "line_chart",
+      "x_axis": "시간(분)",
+      "y_axis": "온도(℃)"
+    },
+    "post_questions": [
+      "알이 자라기 좋은 온도는 몇 도쯤이었나요?",
+      "온도를 일정하게 지키는 게 왜 중요할까요?"
+    ],
+    "report_template_id": "report-basic",
+    "llm_system_prompt_addon": "동물의 한살이(3학년). 온도와 생명의 관계를 쉽게 다룬다. 키트의 DHT11·능동 부저만 사용. 뜨거운 물 안전을 언급하라."
+  },
+  {
+    "id": "exp-3-animal-detector",
+    "title": "🦔 밤에 누가 지나갔지? 동물 감지기",
+    "grade": 3,
+    "unit_id": "3-2-animal-life",
+    "achievement_codes": [
+      "[4과03-02]"
+    ],
+    "difficulty": 2,
+    "duration_min": 30,
+    "required_sensors": [
+      "avoid-ir"
+    ],
+    "optional_sensors": [
+      "photoresistor"
+    ],
+    "required_actuators": [
+      "active-buzzer"
+    ],
+    "extra_materials": [
+      "인형이나 손(동물 역할)"
+    ],
+    "safety_level": "low",
+    "safety_warnings": [],
+    "objectives": [
+      "적외선 센서로 무언가 지나가는 것을 감지하고, 동물의 움직임을 기록하는 관찰기를 만든다"
+    ],
+    "hypothesis_prompt": "동물이 센서 앞을 지나가면 값이 어떻게 바뀔까요?",
+    "steps": [
+      {
+        "n": 1,
+        "instruction_student": "장애물(적외선) 센서 앞에 손을 가까이/멀리 하며 값이 바뀌는지 봐요. (No.31)",
+        "duration_sec": 120,
+        "image_path": "/assets/steps/avoid-obstacle.svg",
+        "llm_coach_prompt": "가까이 있을 때와 없을 때 값을 학생이 직접 만들어 비교하게 하세요.",
+        "expected_state": "sensor_connected",
+        "scripted_replies": {
+          "done": "좋아! 앞에 뭔가 있으면 값이 바뀌지? 이제 '지나가면 삐!' 알림을 붙이자.",
+          "stuck": "괜찮아. 센서 앞 1~5cm에서 손을 움직여 값 변화를 봐줘.",
+          "repeat": "다시! 손이 있을 때 → 없을 때 순서로 값을 비교해줘.",
+          "timer_80": "거의 다 됐어! 조금만 더 ⏳",
+          "timer_end": "시간 다 됐어. 다 했으면 ✅ 눌러줘."
+        },
+        "llm_trigger_examples": [],
+        "sensor_thresholds": {
+          "avoid": [
+            {
+              "range": "== 1",
+              "scripted": "👀 누가 지나갔어요! 감지!"
+            },
+            {
+              "range": "== 0",
+              "scripted": "조용… 아무도 없어요."
+            }
+          ]
+        }
+      },
+      {
+        "n": 2,
+        "instruction_student": "무언가 지나가면 부저가 울리고 횟수가 기록되도록 만들어, 동물 인형으로 시험해요.",
+        "duration_sec": 150,
+        "image_path": "/assets/steps/shock-buzzer.svg",
+        "llm_coach_prompt": "'밤에 어떤 동물이 다녀갔는지 어떻게 알 수 있을까?'라고 물어 관찰·기록의 의미로 연결하세요.",
+        "expected_state": "data_collecting",
+        "scripted_replies": {
+          "done": "동물 감지기 완성! 🦔 지나갈 때마다 기록돼서 누가 다녀갔는지 알 수 있어.",
+          "stuck": "부저가 안 울리면 연결을 확인하고 센서 앞을 막지 않았는지 봐줘.",
+          "repeat": "인형을 센서 앞으로 지나가게 해 감지되는지 확인해줘.",
+          "timer_80": "거의 다 됐어! 조금만 더 ⏳",
+          "timer_end": "시간 다 됐어. 다 했으면 ✅ 눌러줘."
+        },
+        "llm_trigger_examples": [
+          "진짜 동물도 이렇게 관찰해요?",
+          "밤에도 감지돼요?"
+        ]
+      }
+    ],
+    "data_visualization": {
+      "type": "line_chart",
+      "x_axis": "시간(초)",
+      "y_axis": "감지(0/1)"
+    },
+    "post_questions": [
+      "동물이 지나간 것을 무엇으로 알 수 있었나요?",
+      "이 감지기를 어디에 쓰면 좋을까요?"
+    ],
+    "report_template_id": "report-basic",
+    "llm_system_prompt_addon": "동물의 생활(3학년). 적외선 장애물 센서로 움직임을 감지한다. 키트의 avoid-ir·능동 부저만 사용. 야생동물 관찰(무인 카메라)과 연결하라."
+  },
+  {
+    "id": "exp-5-weather-station",
+    "title": "⛅ 우리 반 날씨 관측소",
+    "grade": 5,
+    "unit_id": "5-2-weather",
+    "achievement_codes": [
+      "[6과15-01]"
+    ],
+    "difficulty": 2,
+    "duration_min": 35,
+    "required_sensors": [
+      "dht11"
+    ],
+    "optional_sensors": [
+      "analog-temp",
+      "photoresistor"
+    ],
+    "required_actuators": [],
+    "extra_materials": [
+      "측정할 여러 장소(창가·복도 등)"
+    ],
+    "safety_level": "low",
+    "safety_warnings": [],
+    "objectives": [
+      "온도와 습도를 여러 곳에서 측정·기록해, 우리 생활과 날씨의 관계를 데이터로 이해한다"
+    ],
+    "hypothesis_prompt": "교실 안과 창가 중 어디가 더 따뜻하고 습할까요?",
+    "steps": [
+      {
+        "n": 1,
+        "instruction_student": "온습도 센서로 우리 자리의 온도와 습도를 측정해 기록해요. (No.29)",
+        "duration_sec": 120,
+        "image_path": "/assets/steps/warm-cup.svg",
+        "llm_coach_prompt": "온도와 습도가 각각 무엇을 뜻하는지 학생의 말로 설명하게 하세요.",
+        "expected_state": "data_collecting",
+        "scripted_replies": {
+          "done": "좋아! 우리 자리 날씨를 기록했어. 이번엔 다른 곳과 비교해 보자.",
+          "stuck": "센서가 안정될 때까지 몇 초 기다렸다가 값을 읽어줘.",
+          "repeat": "다시! 온도와 습도 값을 천천히 읽어 기록해줘.",
+          "timer_80": "거의 다 됐어! 조금만 더 ⏳",
+          "timer_end": "시간 다 됐어. 다 했으면 ✅ 눌러줘."
+        },
+        "llm_trigger_examples": [],
+        "sensor_thresholds": {
+          "humidity": [
+            {
+              "range": ">= 70",
+              "scripted": "💧 공기가 축축해요(습해요)."
+            },
+            {
+              "range": "40 ~ 70",
+              "scripted": "쾌적한 습도예요 🙂"
+            },
+            {
+              "range": "< 40",
+              "scripted": "🌵 공기가 건조해요."
+            }
+          ]
+        }
+      },
+      {
+        "n": 2,
+        "instruction_student": "창가·복도 등 다른 곳에서도 측정해, 어디가 더 덥고 습한지 비교해요.",
+        "duration_sec": 150,
+        "image_path": "/assets/steps/light-bright.svg",
+        "llm_coach_prompt": "'장소마다 왜 다를까? 햇빛·바람과 관계있을까?'라고 물어 날씨 요소와 연결하세요.",
+        "expected_state": "data_collecting",
+        "scripted_replies": {
+          "done": "날씨 관측소 완성! ⛅ 장소마다 온도·습도가 다른 걸 데이터로 확인했어.",
+          "stuck": "측정 장소를 바꿀 때 센서가 새 환경에 적응하게 잠깐 기다려줘.",
+          "repeat": "두 장소의 값을 나란히 비교해줘.",
+          "timer_80": "거의 다 됐어! 조금만 더 ⏳",
+          "timer_end": "시간 다 됐어. 다 했으면 ✅ 눌러줘."
+        },
+        "llm_trigger_examples": [
+          "습도가 높으면 왜 끈적해요?",
+          "일기예보는 어떻게 만들어요?"
+        ]
+      }
+    ],
+    "data_visualization": {
+      "type": "bar_chart",
+      "x_axis": "장소",
+      "y_axis": "온도(℃)·습도(%)"
+    },
+    "post_questions": [
+      "가장 덥고 습한 곳은 어디였나요?",
+      "날씨 데이터는 우리 생활에 어떻게 쓰일까요?"
+    ],
+    "report_template_id": "report-comparison",
+    "llm_system_prompt_addon": "날씨와 우리 생활(5학년). 온·습도를 여러 곳에서 비교한다. 키트의 DHT11만 필수. 일기예보·체감과 연결하라."
+  },
+  {
+    "id": "exp-6-flame-detector",
+    "title": "🔥 촛불 탐정: 연소와 불꽃 감지",
+    "grade": 6,
+    "unit_id": "6-2-combustion",
+    "achievement_codes": [
+      "[6과02-04]"
+    ],
+    "difficulty": 3,
+    "duration_min": 35,
+    "required_sensors": [
+      "flame"
+    ],
+    "optional_sensors": [
+      "dht11"
+    ],
+    "required_actuators": [
+      "active-buzzer"
+    ],
+    "extra_materials": [
+      "LED 촛불 또는 (교사 시연용) 양초",
+      "투명 컵"
+    ],
+    "safety_level": "medium",
+    "safety_warnings": [
+      "진짜 불은 반드시 선생님과 함께, 멀리서 관찰해요.",
+      "불 가까이 손·종이를 두지 않아요.",
+      "가능하면 LED 촛불로 안전하게 실험해요."
+    ],
+    "objectives": [
+      "불꽃을 감지하는 센서로 화재 경보기를 만들고, 연소에 산소가 필요함을 관찰한다"
+    ],
+    "hypothesis_prompt": "불꽃을 컵으로 덮으면 어떻게 될까요? 센서는 불을 어떻게 알아챌까요?",
+    "steps": [
+      {
+        "n": 1,
+        "instruction_student": "불꽃 감지 센서를 촛불(또는 LED 촛불) 쪽으로 향하게 두고, 불이 있을 때와 없을 때 값을 비교해요. (No.30)",
+        "duration_sec": 150,
+        "image_path": "/assets/steps/cover-sensor.svg",
+        "llm_coach_prompt": "불이 있을 때와 없을 때 값 차이를 학생이 안전한 거리에서 확인하게 하세요. 안전을 계속 강조.",
+        "expected_state": "sensor_connected",
+        "scripted_replies": {
+          "done": "좋아! 불꽃이 있으면 센서가 알아채지? 이제 '불이야! 삐!' 경보를 붙이자.",
+          "stuck": "괜찮아, 센서 앞을 막지 말고 불꽃 쪽을 향하게 둬줘. (안전 거리 유지)",
+          "repeat": "다시! 불이 있을 때 → 없을 때 순서로 값을 비교해줘.",
+          "timer_80": "거의 다 됐어! 조금만 더 ⏳",
+          "timer_end": "시간 다 됐어. 다 했으면 ✅ 눌러줘."
+        },
+        "llm_trigger_examples": [],
+        "sensor_thresholds": {
+          "flame": [
+            {
+              "range": "== 1",
+              "scripted": "🔥 불꽃 감지! 경보!"
+            },
+            {
+              "range": "== 0",
+              "scripted": "안전해요. 불꽃이 없어요."
+            }
+          ]
+        }
+      },
+      {
+        "n": 2,
+        "instruction_student": "불꽃이 감지되면 부저가 울리는 화재 경보기를 만들고, 컵으로 덮어 불이 꺼지는지 관찰해요.",
+        "duration_sec": 150,
+        "image_path": "/assets/steps/shock-buzzer.svg",
+        "llm_coach_prompt": "'컵을 덮으니 왜 불이 꺼질까?'라고 물어 연소에 산소가 필요함으로 연결하세요. (교사 시연 권장)",
+        "expected_state": "data_collecting",
+        "scripted_replies": {
+          "done": "화재 경보기 완성! 🔥 불을 감지해 빠르게 알려줘. 그리고 산소가 없으면 불이 꺼졌지?",
+          "stuck": "부저가 안 울리면 연결을 확인하고 센서 방향을 불꽃 쪽으로 돌려줘.",
+          "repeat": "불꽃을 감지시켜 경보가 울리는지 확인해줘. (안전!)",
+          "timer_80": "거의 다 됐어! 조금만 더 ⏳",
+          "timer_end": "시간 다 됐어. 다 했으면 ✅ 눌러줘."
+        },
+        "llm_trigger_examples": [
+          "불을 덮으면 왜 꺼져요?",
+          "소화기는 어떻게 불을 꺼요?"
+        ]
+      }
+    ],
+    "data_visualization": {
+      "type": "line_chart",
+      "x_axis": "시간(초)",
+      "y_axis": "불꽃 감지(0/1)"
+    },
+    "post_questions": [
+      "컵을 덮으니 불꽃은 어떻게 됐나요? 왜 그럴까요?",
+      "화재 경보기는 우리를 어떻게 지켜줄까요?"
+    ],
+    "report_template_id": "report-basic",
+    "llm_system_prompt_addon": "연소와 소화(6학년). 불꽃 감지로 화재 경보기를 만들고, 연소의 3요소(특히 산소)를 관찰로 다룬다. 안전을 최우선으로, 진짜 불은 교사 시연·LED 촛불 권장. 키트의 flame·능동 부저만 사용."
+  },
+  {
+    "id": "exp-fusion-buzzer-piano",
+    "title": "🎹 패시브 부저 미니 피아노",
+    "grade": 0,
+    "unit_id": "fusion-sw",
+    "achievement_codes": [
+      "(실과/정보 연계)"
+    ],
+    "difficulty": 3,
+    "duration_min": 40,
+    "required_sensors": [
+      "touch"
+    ],
+    "optional_sensors": [
+      "button"
+    ],
+    "required_actuators": [
+      "passive-buzzer"
+    ],
+    "extra_materials": [
+      "빵판",
+      "점퍼선"
+    ],
+    "safety_level": "low",
+    "safety_warnings": [],
+    "objectives": [
+      "입력(터치/버튼)에 따라 다른 음 높이를 출력하는 미니 악기를 코딩해, 디지털로 소리를 만든다"
+    ],
+    "hypothesis_prompt": "버튼마다 다른 소리를 내려면 무엇을 바꿔 주면 될까요?",
+    "steps": [
+      {
+        "n": 1,
+        "instruction_student": "터치(또는 버튼) 센서를 누르면 패시브 부저에서 소리가 나게 연결해요. (No.32)",
+        "duration_sec": 150,
+        "image_path": "/assets/steps/sound-clap.svg",
+        "llm_coach_prompt": "능동 부저와 달리 패시브 부저는 음 높이를 바꿀 수 있다는 점을 학생이 발견하게 하세요.",
+        "expected_state": "sensor_connected",
+        "scripted_replies": {
+          "done": "좋아! 누르니 소리가 났지? 이제 음의 높낮이를 바꿔 멜로디를 만들자 🎵",
+          "stuck": "괜찮아. 부저의 +/− 방향과 신호선을 확인하고 다시 눌러봐.",
+          "repeat": "다시! 센서를 눌렀다 떼며 소리가 나는지 확인해줘.",
+          "timer_80": "거의 다 됐어! 조금만 더 ⏳",
+          "timer_end": "시간 다 됐어. 다 했으면 ✅ 눌러줘."
+        },
+        "llm_trigger_examples": [],
+        "sensor_thresholds": {
+          "touch": [
+            {
+              "range": "== 1",
+              "scripted": "🎵 톡! 소리가 났어요."
+            }
+          ]
+        }
+      },
+      {
+        "n": 2,
+        "instruction_student": "음의 높이(주파수)를 바꿔 도·미·솔처럼 다른 음을 내고, 짧은 멜로디를 연주해요.",
+        "duration_sec": 180,
+        "image_path": "/assets/steps/sound-quiet.svg",
+        "llm_coach_prompt": "'높은 음과 낮은 음은 무엇이 다를까?'라고 물어 진동 수(주파수)와 연결하세요.",
+        "expected_state": "data_collecting",
+        "scripted_replies": {
+          "done": "미니 피아노 완성! 🎹 디지털로 음을 만들어 연주했어. 멋진 작곡가야!",
+          "stuck": "소리가 안 나면 패시브 부저인지(능동 아님) 확인하고 음 값을 바꿔줘.",
+          "repeat": "버튼마다 다른 음이 나는지 눌러 확인해줘.",
+          "timer_80": "거의 다 됐어! 조금만 더 ⏳",
+          "timer_end": "시간 다 됐어. 다 했으면 ✅ 눌러줘."
+        },
+        "llm_trigger_examples": [
+          "높은 소리는 왜 그렇게 들려요?",
+          "노래도 만들 수 있어요?"
+        ]
+      }
+    ],
+    "data_visualization": {
+      "type": "line_chart",
+      "x_axis": "시간(초)",
+      "y_axis": "입력(0/1)"
+    },
+    "post_questions": [
+      "높은 음과 낮은 음은 무엇이 달랐나요?",
+      "컴퓨터는 어떻게 소리를 만들까요?"
+    ],
+    "report_template_id": "report-basic",
+    "llm_system_prompt_addon": "융합(SW·음악). 패시브 부저로 음 높이를 제어해 미니 악기를 만든다. 능동 부저(고정음)와의 차이, 주파수=음 높이를 쉽게 다룬다. 키트의 터치/버튼·패시브 부저만 사용."
+  },
+  {
+    "id": "exp-6-moon-phase",
+    "title": "🌙 달의 위상 밝기 관측기",
+    "grade": 6,
+    "unit_id": "6-1-earth-moon",
+    "achievement_codes": [
+      "[6과14-02]"
+    ],
+    "difficulty": 3,
+    "duration_min": 35,
+    "required_sensors": [
+      "photoresistor"
+    ],
+    "optional_sensors": [
+      "rotary-encoder"
+    ],
+    "required_actuators": [],
+    "extra_materials": [
+      "공(달 모형)",
+      "손전등(태양 역할)",
+      "어두운 공간"
+    ],
+    "safety_level": "low",
+    "safety_warnings": [
+      "손전등을 친구 눈에 직접 비추지 않아요."
+    ],
+    "objectives": [
+      "빛의 방향에 따라 달(공)의 밝은 부분이 달라짐을 빛 센서 값으로 관찰해 달의 위상을 이해한다"
+    ],
+    "hypothesis_prompt": "달(공)을 돌려가며 빛을 비추면, 밝게 보이는 부분은 어떻게 달라질까요?",
+    "steps": [
+      {
+        "n": 1,
+        "instruction_student": "어두운 곳에서 공(달)에 손전등을 비추고, 빛 센서로 밝은 면의 값을 읽어요. (No.12)",
+        "duration_sec": 150,
+        "image_path": "/assets/steps/light-bright.svg",
+        "llm_coach_prompt": "빛을 받는 쪽과 그늘진 쪽 값이 어떻게 다른지 학생이 직접 확인하게 하세요.",
+        "expected_state": "sensor_connected",
+        "scripted_replies": {
+          "done": "좋아! 빛을 받는 면이 밝지? 이제 공을 돌려가며 밝기를 관측하자 🌙",
+          "stuck": "괜찮아. 센서를 공의 밝은 면 가까이 대고 값을 읽어줘.",
+          "repeat": "다시! 밝은 면 → 그늘진 면 순서로 값을 비교해줘.",
+          "timer_80": "거의 다 됐어! 조금만 더 ⏳",
+          "timer_end": "시간 다 됐어. 다 했으면 ✅ 눌러줘."
+        },
+        "llm_trigger_examples": [],
+        "sensor_thresholds": {
+          "photoresistor": [
+            {
+              "range": "> 700",
+              "scripted": "🌕 보름달처럼 환해요!"
+            },
+            {
+              "range": "300 ~ 700",
+              "scripted": "🌗 반달처럼 절반쯤 밝아요."
+            },
+            {
+              "range": "< 300",
+              "scripted": "🌑 그믐달처럼 어두워요."
+            }
+          ]
+        }
+      },
+      {
+        "n": 2,
+        "instruction_student": "공을 조금씩 돌려가며(또는 다이얼로) 위치별 밝기를 기록해 달의 위상과 비교해요.",
+        "duration_sec": 150,
+        "image_path": "/assets/steps/rgb-mix.svg",
+        "llm_coach_prompt": "'밝게 보이는 부분이 달라지는 건 달이 빛나서일까, 빛을 받아서일까?'라고 물어 반사 개념으로 이끄세요.",
+        "expected_state": "data_collecting",
+        "scripted_replies": {
+          "done": "달 관측 완성! 🌙 보는 위치에 따라 밝은 부분이 달라지는 게 위상이야.",
+          "stuck": "공을 천천히 돌리며 각 위치의 값을 기록해줘.",
+          "repeat": "여러 위치의 밝기를 비교해줘.",
+          "timer_80": "거의 다 됐어! 조금만 더 ⏳",
+          "timer_end": "시간 다 됐어. 다 했으면 ✅ 눌러줘."
+        },
+        "llm_trigger_examples": [
+          "달은 왜 모양이 변해요?",
+          "달도 스스로 빛나요?"
+        ]
+      }
+    ],
+    "data_visualization": {
+      "type": "line_chart",
+      "x_axis": "달의 위치(회전)",
+      "y_axis": "밝기(빛 센서 값)"
+    },
+    "post_questions": [
+      "밝게 보이는 부분이 달라진 까닭은 무엇일까요?",
+      "달은 스스로 빛날까요, 빛을 반사할까요?"
+    ],
+    "report_template_id": "report-basic",
+    "llm_system_prompt_addon": "지구와 달의 운동(6학년). 빛 센서로 달(공)의 밝은 면 변화를 관측해 위상을 이해한다. 달은 스스로 빛나지 않고 햇빛을 반사함을 강조. 키트의 조도 센서·로터리 엔코더만 사용."
   }
 ]

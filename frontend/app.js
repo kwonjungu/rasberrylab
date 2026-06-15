@@ -17,7 +17,16 @@ const MISSION_THEME = {
   "exp-6-color-mixing":      { icon: "🎨", tag: "빛의 색을 섞어보자" },
   "exp-fusion-auto-door":    { icon: "🚪", tag: "스스로 열리는 자동문 시스템" },
   "exp-fusion-self-driving": { icon: "🤖", tag: "장애물을 피하는 자율주행" },
-  "exp-fusion-smart-plant":  { icon: "🌱", tag: "스마트 화분 자동 돌봄" },
+  "exp-fusion-smart-plant":  { icon: "🌱", tag: "빛·온습도로 돌보는 스마트 화분" },
+  "exp-6-electric-signal":   { icon: "🚦", tag: "전기로 켜는 신호등·경보기" },
+  "exp-4-quake-alarm":       { icon: "🌍", tag: "흔들림을 잡는 지진 경보기" },
+  "exp-fusion-servo-gate":   { icon: "🚧", tag: "다가오면 열리는 자동 차단기" },
+  "exp-3-incubator":         { icon: "🐣", tag: "따뜻함을 지키는 부화기" },
+  "exp-3-animal-detector":   { icon: "🦔", tag: "밤에 누가 지나갔지? 동물 감지기" },
+  "exp-5-weather-station":   { icon: "⛅", tag: "우리 반 날씨 관측소" },
+  "exp-6-flame-detector":    { icon: "🔥", tag: "촛불 탐정·화재 경보기" },
+  "exp-fusion-buzzer-piano": { icon: "🎹", tag: "소리를 만드는 미니 피아노" },
+  "exp-6-moon-phase":        { icon: "🌙", tag: "빛으로 보는 달의 위상" },
 };
 
 // 학년 → 지도 구역(월드) 메타
@@ -69,8 +78,7 @@ function labApp() {
     inputText: "",
     history: [], // {role, text}
     showHistory: false,
-    ttsOn: true,
-    sensor: null, // {label, value, unit}
+    sensor: null, // (구) 단일 센서 위젯 — 미사용
     timer: { total: 0, left: 0, handle: null },
 
     // 안전수칙·역할·도움·막힘
@@ -94,6 +102,16 @@ function labApp() {
     spark: {}, // {espId_sensor: [값...]}
     sensorWs: null,
 
+    // ---- 실시간 신호/데이터 ----
+    sensorLive: {},      // "esp_sensor" → {esp, sensor, value, unit, ts}
+    sensorPulse: {},     // "esp_sensor" → bool (도착 펄스)
+    nowTick: Date.now(), // 1초 틱 (신선도 재계산용)
+    dataLog: [],         // {t, esp, sensor, value, unit} — micro:bit식 기록
+    showData: false,     // 데이터 패널 토글
+    firstSignal: false,  // 첫 신호 도착 여부 (성공 연출용)
+    signalToast: "",     // 일시 안내 배너
+    sfxMuted: false,
+
     // 이어하기
     resumeInfo: null,
     showResume: false,
@@ -102,6 +120,7 @@ function labApp() {
     async init() {
       const p = new URLSearchParams(location.search);
       this.teamName = p.get("team") || "";
+      this.demoMode = p.get("demo") === "1";
       // 부팅 시 미완료 세션 감지 → 이어하기 제안 (launcher가 ?resume=1 부여)
       if (p.get("resume") === "1") {
         const latest = await fetch("/api/checkpoints/latest").then((x) => x.json()).catch(() => ({}));
@@ -168,7 +187,7 @@ function labApp() {
     openBriefing(exp) {
       this.briefing = exp;
       this.briefLine = this.story ? this.story.brief(exp.id, exp.title) : "";
-      SciAI.speak(this.briefLine || `${exp.title}. 미션을 시작할까요?`, false);
+      this.sfx("select");
     },
     closeBriefing() { this.briefing = null; },
 
@@ -201,6 +220,9 @@ function labApp() {
 
     // ---- 실시간 센서 WebSocket ----
     connectSensorWs() {
+      // 신선도(신호 들어오는 중/끊김) 1초마다 재계산
+      if (!this._tick) this._tick = setInterval(() => { this.nowTick = Date.now(); }, 1000);
+      if (this.demoMode) this.startDemoFeed();   // ?demo=1: 가짜 신호 주입
       if (this.sensorWs && this.sensorWs.readyState <= 1) return; // 이미 연결됨
       try {
         const proto = location.protocol === "https:" ? "wss" : "ws";
@@ -212,11 +234,7 @@ function labApp() {
           else if (ev.type === "esp_status") this.refreshEsp();
           else if (ev.type === "data") {
             this.refreshEsp();
-            const key = `${ev.esp_id}_${ev.sensor}`;
-            const arr = this.spark[key] || [];
-            arr.push(ev.value);
-            if (arr.length > 30) arr.shift();
-            this.spark[key] = arr;
+            this.onSensorData(ev);
           } else if (ev.type === "message" && ev.source === "rule") {
             this.setBubble(ev.content, true); // 라이브 룰 피드백을 챗에 자동 표시
           }
@@ -229,8 +247,117 @@ function labApp() {
     async refreshEsp() {
       this.espDevices = (await fetch("/api/sensors/active").then((x) => x.json()).catch(() => ({}))).devices || [];
     },
+    // 센서 1건 처리(실시간 값·펄스·기록·효과음) — WS와 데모 공용
+    onSensorData(ev) {
+      const key = `${ev.esp_id}_${ev.sensor}`;
+      const arr = this.spark[key] || [];
+      arr.push(ev.value);
+      if (arr.length > 30) arr.shift();
+      this.spark[key] = arr;
+      this.sensorLive = { ...this.sensorLive, [key]: { esp: ev.esp_id, sensor: ev.sensor, value: ev.value, unit: ev.unit || "", ts: Date.now() } };
+      this.sensorPulse = { ...this.sensorPulse, [key]: true };
+      setTimeout(() => { this.sensorPulse = { ...this.sensorPulse, [key]: false }; }, 480);
+      this.dataLog.push({ t: Date.now(), esp: ev.esp_id, sensor: ev.sensor, value: ev.value, unit: ev.unit || "" });
+      if (this.dataLog.length > 3000) this.dataLog.shift();
+      if (!this.firstSignal) { this.firstSignal = true; this.sfx("connect"); this.flashSignal("센서 연결 성공! 신호가 들어와요 🎉"); }
+      else this.sfx("blip");
+    },
+    // 데모 신호 주입 (?demo=1) — 실제 센서 없이 대시보드/데이터/효과음 테스트
+    startDemoFeed() {
+      if (this._demo) return;
+      const sensors = [
+        { esp: "demo-01", sensor: "temperature", unit: "°C", base: 22, amp: 6 },
+        { esp: "demo-02", sensor: "photoresistor", unit: "lux", base: 300, amp: 180 },
+      ];
+      let k = 0;
+      this._demo = setInterval(() => {
+        k++;
+        for (const s of sensors) {
+          const v = Math.round((s.base + Math.sin(k / 3 + s.base) * s.amp) * 10) / 10;
+          this.onSensorData({ esp_id: s.esp, sensor: s.sensor, value: v, unit: s.unit });
+        }
+      }, 1200);
+    },
     espIcon(status) {
       return status === "alive" ? "🤖" : status === "dead" ? "😵" : "😴";
+    },
+
+    // ===== 효과음 =====
+    sfx(name) {
+      const s = window.SciAI && SciAI.sfx; if (!s) return;
+      if (name === "blip") s.blipThrottled(); else s.play(name);
+    },
+    toggleMute() {
+      this.sfxMuted = !this.sfxMuted;
+      if (window.SciAI && SciAI.sfx) SciAI.sfx.setMuted(this.sfxMuted);
+      if (!this.sfxMuted) this.sfx("click");
+    },
+
+    // ===== 실시간 신호 대시보드 =====
+    get liveSensors() {
+      return Object.values(this.sensorLive)
+        .sort((a, b) => (a.esp + a.sensor).localeCompare(b.esp + b.sensor));
+    },
+    get liveCount() {
+      return Object.values(this.sensorLive).filter((it) => this.nowTick - it.ts < 4000).length;
+    },
+    // 신호 신선도: 4초내=수신중 / 12초내=느림 / 그외=끊김 (nowTick 의존 → 1초마다 갱신)
+    sig(it) {
+      const age = this.nowTick - it.ts;
+      if (age < 4000) return { cls: "live", dot: "on", label: "📡 신호 들어오는 중" };
+      if (age < 12000) return { cls: "slow", dot: "slow", label: "신호가 느려요…" };
+      return { cls: "stale", dot: "off", label: "신호 끊김 ⚠" };
+    },
+    fmtVal(v) {
+      return (typeof v === "number" && !Number.isInteger(v)) ? v.toFixed(1) : v;
+    },
+    // 노드 파이프라인 표시용
+    get pipeSensorName() {
+      const l = this.liveSensors[0];
+      if (l) return this.sensorLabel(l.sensor);
+      const d = this.espDevices[0];
+      return (d && (d.sensor_type)) ? this.sensorLabel(d.sensor_type) : "센서 대기";
+    },
+    get pipeEspName() {
+      const l = this.liveSensors[0];
+      return (l && l.esp) || (this.espDevices[0] && this.espDevices[0].id) || "연결 대기";
+    },
+    get anyPulse() {
+      return Object.values(this.sensorPulse).some(Boolean);
+    },
+    sensorLabel(id) {
+      return (this.kit[id] && this.kit[id].label) || id;
+    },
+    flashSignal(msg) {
+      this.signalToast = msg;
+      clearTimeout(this._sigT);
+      this._sigT = setTimeout(() => { this.signalToast = ""; }, 2600);
+    },
+
+    // ===== 데이터(마이크로비트 스타일) =====
+    toggleData() { this.sfx("click"); this.showData = !this.showData; },
+    clearLog() { this.sfx("warn"); this.dataLog = []; },
+    downloadCsv() {
+      this.sfx("success");
+      if (!this.dataLog.length) return;
+      const head = ["시간", "ESP", "센서", "값", "단위"];
+      const esc = (c) => `"${String(c).replace(/"/g, '""')}"`;
+      const lines = [head.map(esc).join(",")];
+      for (const d of this.dataLog) {
+        lines.push([new Date(d.t).toLocaleString("ko-KR"), d.esp, d.sensor, d.value, d.unit || ""].map(esc).join(","));
+      }
+      const csv = "﻿" + lines.join("\r\n"); // BOM → 엑셀 한글 깨짐 방지
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      const stamp = new Date().toISOString().slice(0, 16).replace(/[:T]/g, "-");
+      a.href = url;
+      a.download = `${this.teamName || "실험"}_${(this.expTitle || "데이터").replace(/\s+/g, "")}_${stamp}.csv`;
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    },
+    get dataPreview() {
+      return this.dataLog.slice(-40).reverse();
     },
     sparkPoints(esp, sensor) {
       const arr = this.spark[`${esp}_${sensor}`] || [];
@@ -242,8 +369,6 @@ function labApp() {
     applyGrade() {
       this.gradeTier = this.grade && this.grade <= 4 ? "lower" : "upper";
       document.body.dataset.gradeTier = this.gradeTier;
-      // 저학년: TTS 자동재생 ON, 고학년: OFF (age_adapter 규칙)
-      this.ttsOn = this.gradeTier === "lower";
     },
 
     async loadCurrent() {
@@ -297,11 +422,22 @@ function labApp() {
     },
 
     // ---- 도움요청 → GPIO 부저·LED ----
-    async callHelp() {
-      const r = await fetch(`/api/session/${this.sessionId}/help`, { method: "POST" }).then((x) => x.json());
+    // 🤚 도와줘 → AI(라비)와 직접 대화. 지금 단계 맥락으로 즉시 도움 요청.
+    async askAiHelp() {
+      this.sfx("help");
       this.history.push({ role: "user", text: "🤚 도와줘" });
-      this.setBubble(r.message || "선생님께 알렸어요! 🔔", true);
-      // GPIO가 없으면 화면 깜빡임으로 대체
+      const q = `지금 "${this.expTitle || '이 미션'}"의 ${this.stepN}단계에서 막혔어. `
+              + `${this.instruction ? "단계 안내는 '" + this.instruction + "' 야. " : ""}`
+              + `어떻게 하면 되는지 쉽고 친절하게 알려줘. 궁금한 걸 더 물어볼 수도 있어.`;
+      await this.send({ input_type: "text", payload: { text: q } });
+      try { this.$nextTick(() => { const el = document.getElementById("chatInput"); if (el) el.focus(); }); } catch (e) {}
+    },
+    // (선택) 실제 교사 호출 — 부저/LED. 현재 도움 버튼은 AI 대화로 동작.
+    async callTeacher() {
+      this.sfx("help");
+      const r = await fetch(`/api/session/${this.sessionId}/help`, { method: "POST" }).then((x) => x.json()).catch(() => ({}));
+      this.history.push({ role: "user", text: "🔔 선생님 호출" });
+      this.setBubble(r.message || "선생님께 알렸어요! 🔔");
       if (r.signal && r.signal.fallback === "screen_blink") {
         this.blink = true;
         setTimeout(() => (this.blink = false), 1500);
@@ -309,11 +445,10 @@ function labApp() {
     },
 
     // ---- 말풍선 ----
-    setBubble(text, speak) {
+    setBubble(text /*, speak (TTS 제거됨) */) {
       this.bubble = text || "";
       this.bubbleHtml = SciAI.md(this.bubble);
       if (text) this.history.push({ role: "assistant", text });
-      if (speak) SciAI.speak(text, this.ttsOn);
     },
 
     // ---- 타이머 ----
@@ -336,16 +471,20 @@ function labApp() {
 
     // ---- 빠른답변 버튼 ----
     async onQuick(btn) {
+      this.sfx("click");
       if (btn.id === "begin") {
+        this.sfx("step");
         await fetch(`/api/session/${this.sessionId}/step/next`, { method: "POST" });
         await this.loadCurrent();
         return;
       }
       if (btn.id === "help") {
-        await this.callHelp();
+        await this.askAiHelp();
         return;
       }
       this.history.push({ role: "user", text: btn.label });
+      // '다 했어요' → AI 확인 후 통과(핵심 단계만 게이트)
+      if (btn.id === "done") { await this.tryAdvance(); return; }
       // 막힘 신호: stuck/repeat 연속 2회 이상이면 도움 권유
       if (btn.id === "stuck" || btn.id === "repeat") {
         this.stuckCount++;
@@ -354,17 +493,41 @@ function labApp() {
       }
       await this.send({ input_type: "quick_reply", payload: { button_id: btn.id } });
       if (this.stuckCount >= 2) {
-        setTimeout(() => this.setBubble("선생님을 부를까? 🤚 도와줘 버튼을 눌러봐.", true), 800);
+        setTimeout(() => this.setBubble("막히면 🤚 도와줘를 눌러줘. 내가 바로 도와줄게! 🤖"), 800);
         this.stuckCount = 0;
       }
-      // 'done' 이면 다음 단계로 진행 — 마지막 단계면 미션 클리어 축하
-      if (btn.id === "done") {
+    },
+
+    // AI 단계 확인 → 통과해야 다음 단계. 핵심(데이터수집) 단계만 게이트, 나머지는 자동 통과.
+    async tryAdvance() {
+      if (this.totalSteps <= 0) return;
+      this.verifying = true;
+      this.setBubble("🤖 라비가 데이터를 확인하고 있어요...");
+      let v = { pass: true };
+      try {
+        v = await fetch(`/api/session/${this.sessionId}/step/verify`, {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ answer: (this.inputText || "").trim() }),
+        }).then((x) => x.json());
+      } catch (e) { v = { pass: true }; }
+      this.verifying = false;
+      if (v && v.error) v = { pass: true };
+
+      if (v.pass) {
+        this.sfx("success");
+        if (v.gated && v.feedback) this.setBubble("✅ " + v.feedback);
         if (this.stepN < this.totalSteps) {
+          this.sfx("step");
+          this.inputText = "";
           await fetch(`/api/session/${this.sessionId}/step/next`, { method: "POST" });
-          setTimeout(() => this.loadCurrent(), 600);
-        } else if (this.totalSteps > 0) {
-          setTimeout(() => this.celebrateClear(), 500);
+          setTimeout(() => this.loadCurrent(), 700);
+        } else {
+          setTimeout(() => this.celebrateClear(), 600);
         }
+      } else {
+        this.sfx("warn");
+        this.setBubble("🤔 " + (v.feedback || "조금 더 해볼까? 측정을 다시 확인해줘.")
+          + "  준비되면 다시 ✅ 를 누르거나, 무엇을 관찰했는지 아래에 적어줘!");
       }
     },
 
@@ -378,7 +541,7 @@ function labApp() {
         rank: this.story ? this.story.rankFor(diff) : { icon: "🏆", name: "탐험가" },
         line: this.story && exp ? this.story.clear(exp.id) : "미션 성공! 🎉",
       };
-      SciAI.speak(this.celebrate.line, true);
+      this.sfx("celebrate");
     },
 
     // ---- 자유 텍스트 전송 ----
@@ -411,17 +574,11 @@ function labApp() {
           this.thinking = false; // 조용히 무응답
         } else if (evt.type === "done") {
           this.thinking = false;
-          if (streaming) {
-            this.history.push({ role: "assistant", text: this.bubble });
-            SciAI.speak(this.bubble, this.ttsOn);
-          }
+          if (streaming) this.history.push({ role: "assistant", text: this.bubble });
         }
       });
     },
 
-    repeatTts() {
-      SciAI.speak(this.bubble, true);
-    },
 
     // ---- 이어하기 ----
     async doResume() {

@@ -181,6 +181,9 @@
 
     <!-- ===================== 미션 수행 화면(챗) ===================== -->
     <!-- 헤더 -->
+    <!-- 신호 성공 배너 -->
+    <div class="signal-toast" x-show="signalToast" x-transition x-cloak x-text="signalToast"></div>
+
     <div class="topbar" x-show="screen==='mission'">
       <button class="backmap" @click="backToMap()" title="지도로">🗺</button>
       <span class="title">🧪 <span x-text="teamName ? teamName + ' 모둠' : 'Science Lab'"></span></span>
@@ -188,6 +191,7 @@
       <span class="spacer"></span>
       <button @click="onQuick({id:'help',label:'🤚 도와줘'})">🔔 도움요청</button>
       <button @click="showHistory=!showHistory">🗂 지난대화</button>
+      <button @click="toggleMute()" :title="sfxMuted ? '효과음 켜기' : '효과음 끄기'" x-text="sfxMuted ? '🔇' : '🔊'"></button>
       <button @click="openTeacher()">🎓 교사</button>
     </div>
 
@@ -214,6 +218,95 @@
     <!-- 메인 -->
     <div class="main" x-show="screen==='mission'">
 
+      <!-- ===== 실시간 센서 대시보드 (챗봇 위) ===== -->
+      <div class="live-dash">
+        <div class="ld-head">
+          <span class="ld-title">📡 실시간 센서</span>
+          <span class="ld-state" :class="liveCount>0 ? 'on' : 'off'"
+                x-text="liveCount>0 ? ('🟢 신호 수신 중 · '+liveCount+'개') : '⚪ 신호 기다리는 중'"></span>
+          <span class="spacer"></span>
+          <button class="ld-data-btn" @click="toggleData()"
+                  x-text="showData ? '✕ 데이터 닫기' : ('📊 데이터 ('+dataLog.length+')')"></button>
+        </div>
+
+        <!-- ===== 데이터 흐름 노드 + 오른쪽 입력값 ===== -->
+        <div class="pipeline">
+          <div class="pipe-flow">
+            <div class="pnode" :class="{on: liveCount>0, pulse: anyPulse}">
+              <span class="pn-ic">🔌</span><b>센서</b><small x-text="pipeSensorName"></small>
+            </div>
+            <div class="parrow" :class="{flow: anyPulse}">▸</div>
+            <div class="pnode" :class="{on: espDevices.length || liveSensors.length, pulse: anyPulse}">
+              <span class="pn-ic">🤖</span><b>ESP 보드</b><small x-text="pipeEspName"></small>
+            </div>
+            <div class="parrow" :class="{flow: anyPulse}">▸</div>
+            <div class="pnode" :class="{on: liveCount>0, pulse: anyPulse}">
+              <span class="pn-ic">📊</span><b>우리 화면</b><small>실시간</small>
+            </div>
+            <div class="parrow">▸</div>
+            <div class="pnode">
+              <span class="pn-ic">🧠</span><b>AI 도우미</b><small>코칭</small>
+            </div>
+          </div>
+          <div class="pipe-inputs">
+            <div class="pi-title">📥 입력값</div>
+            <template x-for="it in liveSensors" :key="'in_'+it.esp+'_'+it.sensor">
+              <div class="pi-row" :class="sig(it).cls">
+                <span class="pi-name" x-text="sensorLabel(it.sensor)"></span>
+                <b class="pi-val"><span x-text="fmtVal(it.value)"></span><i x-text="it.unit"></i></b>
+              </div>
+            </template>
+            <div class="pi-empty" x-show="!liveSensors.length">아직 입력 없음</div>
+          </div>
+        </div>
+
+        <div class="ld-cards" x-show="liveSensors.length">
+          <template x-for="it in liveSensors" :key="it.esp+'_'+it.sensor">
+            <div class="ld-card" :class="[ sig(it).cls, sensorPulse[it.esp+'_'+it.sensor] ? 'pulse' : '' ]">
+              <div class="ld-top">
+                <span class="ld-dot" :class="sig(it).dot"></span>
+                <b class="ld-name" x-text="sensorLabel(it.sensor)"></b>
+                <small class="ld-esp" x-text="it.esp"></small>
+              </div>
+              <div class="ld-val"><span x-text="fmtVal(it.value)"></span><i x-text="it.unit"></i></div>
+              <svg class="ld-spark" viewBox="0 0 100 30" preserveAspectRatio="none">
+                <polyline :points="sparkPoints(it.esp, it.sensor)" fill="none" stroke="currentColor" stroke-width="2.5"/>
+              </svg>
+              <div class="ld-sig" x-text="sig(it).label"></div>
+            </div>
+          </template>
+        </div>
+        <div class="ld-empty" x-show="!liveSensors.length">
+          🔌 센서를 연결하면 여기에 <b>실시간 값</b>이 딱딱 나타나요!
+        </div>
+
+        <!-- 데이터 패널 (마이크로비트 스타일) -->
+        <div class="datalog" x-show="showData" x-cloak>
+          <div class="dl-bar">
+            <span class="dl-count">📋 기록 <b x-text="dataLog.length"></b>줄</span>
+            <span class="spacer"></span>
+            <button class="dl-dl" @click="downloadCsv()" :disabled="!dataLog.length">⬇ CSV 다운로드</button>
+            <button class="dl-clear" @click="clearLog()" :disabled="!dataLog.length">🗑 지우기</button>
+          </div>
+          <div class="dl-wrap">
+            <table class="dl-table">
+              <thead><tr><th>시간</th><th>센서</th><th>값</th><th>단위</th></tr></thead>
+              <tbody>
+                <template x-for="(d,i) in dataPreview" :key="i">
+                  <tr>
+                    <td x-text="new Date(d.t).toLocaleTimeString('ko-KR')"></td>
+                    <td x-text="sensorLabel(d.sensor)"></td>
+                    <td class="num" x-text="fmtVal(d.value)"></td>
+                    <td x-text="d.unit"></td>
+                  </tr>
+                </template>
+              </tbody>
+            </table>
+          </div>
+          <div class="dl-note">최근 40줄 미리보기 · 다운로드는 전체 <b x-text="dataLog.length"></b>줄(CSV)</div>
+        </div>
+      </div>
+
       <!-- 미션 카드: 삽화 + 단계 배지 + 안내문을 한 묶음으로 -->
       <div class="mission-card">
         <!-- 단계 삽화 -->
@@ -229,9 +322,6 @@
         <div class="bubble" :class="{thinking: thinking}">
           <template x-if="thinking"><span>🤖 AI가 생각 중이야... 잠깐만 🤔</span></template>
           <template x-if="!thinking"><div x-html="bubbleHtml || '...'"></div></template>
-          <div class="bubble-actions" x-show="bubble && !thinking">
-            <button @click="repeatTts()">🔊 다시 듣기</button>
-          </div>
         </div>
       </div>
 
@@ -239,25 +329,6 @@
       <div class="timer" x-show="timer.left > 0">
         <div class="bar"><span :style="`width:${timerPct}%`"></span></div>
         <div class="label"><span x-text="timer.left"></span>초 남음</div>
-      </div>
-
-      <!-- 센서 표시 -->
-      <div class="sensor" x-show="sensor">
-        📊 <span x-text="sensor?.label"></span>: <span x-text="sensor?.value"></span><span x-text="sensor?.unit"></span>
-      </div>
-
-      <!-- 실시간 ESP 상태 위젯 -->
-      <div class="esp-widget" x-show="espDevices.length">
-        <template x-for="d in espDevices" :key="d.id">
-          <div class="esp-row" :class="d.status">
-            <span x-text="espIcon(d.status) + ' ' + d.id"></span>
-            <small x-text="d.sensor_type || ''"></small>
-            <svg class="spark" viewBox="0 0 100 30" preserveAspectRatio="none" x-show="sparkPoints(d.id, d.sensor_type)">
-              <polyline :points="sparkPoints(d.id, d.sensor_type)" fill="none" stroke="#3b82f6" stroke-width="2"/>
-            </svg>
-            <span class="st" x-text="d.status==='alive' ? '연결됨 ✅' : '끊김 ⚠'"></span>
-          </div>
-        </template>
       </div>
 
       <!-- 안전 경고 -->
@@ -279,8 +350,8 @@
 
     <!-- 입력바 -->
     <div class="inputbar" x-show="screen==='mission'">
-      <input x-model="inputText" @keydown.enter="sendText()"
-        placeholder="🎤 말하거나 키보드로 적어줘..." />
+      <input id="chatInput" x-model="inputText" @keydown.enter="sendText()"
+        placeholder="🤖 라비에게 무엇이든 물어봐..." />
       <button @click="sendText()">전송 ▶</button>
     </div>
 
