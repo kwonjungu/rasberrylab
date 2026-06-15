@@ -1,5 +1,27 @@
 [
   {
+    "id": "onboarding-first-class",
+    "title": "센서 이해하기 — 내 보드 친구를 알아보자",
+    "grade": 3,
+    "unit_id": "3-1-matter-state",
+    "difficulty": 1,
+    "duration_min": 45,
+    "required_sensors": [],
+    "optional_sensors": [],
+    "required_actuators": [],
+    "extra_materials": ["ESP8266 보드", "USB 케이블", "빵판", "점퍼선(빨강/검정)"],
+    "safety_level": "low",
+    "safety_warnings": ["전선을 입에 넣지 않아요.", "젖은 손으로 보드를 만지지 않아요."],
+    "objectives": [
+      "ESP8266 보드의 부위 이름을 안다",
+      "점퍼선·USB·빵판을 구분하고 전원을 안전하게 연결한다",
+      "센서가 어떻게 값을 보내는지 이해한다"
+    ],
+    "hypothesis_prompt": "보드에 센서를 연결하면 화면에 무엇이 나타날까요?",
+    "steps": [],
+    "report_template_id": "report-basic"
+  },
+  {
     "id": "exp-3-magnet-distance",
     "title": "자석의 힘, 거리로 재 보기",
     "grade": 3,

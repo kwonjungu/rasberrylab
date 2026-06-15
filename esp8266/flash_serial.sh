@@ -19,15 +19,20 @@ export PATH="/mnt/nvme/bin:$PATH"
 export ARDUINO_DIRECTORIES_DATA=/mnt/nvme/arduino15
 export ARDUINO_DIRECTORIES_USER=/mnt/nvme/Arduino
 
-[ -f "$HDR" ] || { echo "❌ 센서 헤더 없음: $HDR"; echo "가능: $(cd "$ROOT/esp8266/sensors" && ls *.h | sed 's/.h//' | tr '\n' ' ')"; exit 1; }
-
-# 1) 격리된 빌드 스케치 구성 (sensors/ 동봉, SENSOR_INCLUDE 치환)
+# 1) 격리된 빌드 스케치 구성
 BUILD=/tmp/sci_serial
 rm -rf "$BUILD"; mkdir -p "$BUILD"
-sed "s#\"sensors/[a-zA-Z0-9_-]*\.h\"#\"sensors/$SENSOR.h\"#" \
-    "$ROOT/esp8266/template_serial.ino" > "$BUILD/sci_serial.ino"
-cp -r "$ROOT/esp8266/sensors" "$BUILD/"
-echo "🛠  센서=$SENSOR  포트=$PORT  →  $(grep -m1 SENSOR_INCLUDE "$BUILD/sci_serial.ino")"
+if [ "$SENSOR" = "multi" ]; then
+  # 멀티포트 펌웨어 — 한 번만 굽고 센서는 자유 교체(재플래시 불필요). 권장 기본값.
+  cp "$ROOT/esp8266/firmware_multi.ino" "$BUILD/sci_serial.ino"
+  echo "🛠  멀티포트 펌웨어  포트=$PORT  (A0 + D1/D5/D6/D7 + DHT11@D2 동시 수신)"
+else
+  [ -f "$HDR" ] || { echo "❌ 센서 헤더 없음: $HDR"; echo "가능: multi  $(cd "$ROOT/esp8266/sensors" && ls *.h | sed 's/.h//' | tr '\n' ' ')"; exit 1; }
+  sed "s#\"sensors/[a-zA-Z0-9_-]*\.h\"#\"sensors/$SENSOR.h\"#" \
+      "$ROOT/esp8266/template_serial.ino" > "$BUILD/sci_serial.ino"
+  cp -r "$ROOT/esp8266/sensors" "$BUILD/"
+  echo "🛠  센서=$SENSOR  포트=$PORT  →  $(grep -m1 SENSOR_INCLUDE "$BUILD/sci_serial.ino")"
+fi
 
 # 2) 백엔드 정지 → 포트 해제 (User=kwon, Restart=on-failure 라 정상종료 시 재기동 안 함)
 MAINPID=$(systemctl show -p MainPID --value science-ai-backend 2>/dev/null || echo 0)

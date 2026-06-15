@@ -635,3 +635,9 @@ button:disabled { opacity: .5; cursor: not-allowed; filter: grayscale(.25); tran
 .pi-val i { font-size: 10px; font-weight: 600; font-style: normal; margin-left: 1px; opacity: .75; }
 .pi-empty { font-size: 12px; color: #94a3b8; padding: 4px 2px; }
 @media (max-width: 620px){ .pipeline{ flex-direction: column; } .pipe-inputs{ width:auto; border-left:none; border-top:1px dashed #e2e8f0; padding-left:0; padding-top:8px; } }
+
+/* 🔌 라비 연결 안내(브리핑) — 아이들이 가장 먼저 보도록 강조 */
+.bf-wiring { background: #eef6ff; border: 2px solid #bcdcff; border-radius: 14px; }
+.bf-wiring .bf-h { color: #1d6fd6; }
+.bf-wiring li { margin: 6px 0; line-height: 1.5; }
+.bf-wiring b { color: #d6451d; }

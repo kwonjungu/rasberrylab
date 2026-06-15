@@ -4,6 +4,7 @@
 
 // 실험별 테마(아이콘·한 줄 소개) — 지도 위 스테이지 표현용
 const MISSION_THEME = {
+  "onboarding-first-class":  { icon: "🔌", tag: "보드 친구 만나기 (첫 수업)" },
   "exp-3-magnet-distance":   { icon: "🧲", tag: "자석의 힘을 거리로 측정!" },
   "exp-3-sound-clap":        { icon: "🔊", tag: "박수 소리의 크기를 잡아라" },
   "exp-3-ice-melt-temp":     { icon: "🧊", tag: "얼음이 녹는 온도의 비밀" },

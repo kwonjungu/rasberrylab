@@ -12,3 +12,5 @@ reportlab==4.5.1
 numpy
 # 데스크톱 아이콘 생성용(선택)
 pillow
+# USB 직결 ESP(시리얼) 수신 — serial_reader.py
+pyserial

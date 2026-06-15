@@ -7,7 +7,7 @@ echo "==> Science AI Lab 설치 시작"
 # 1. 시스템 패키지
 sudo apt update
 sudo apt install -y python3-venv python3-pip mosquitto mosquitto-clients \
-  hostapd dnsmasq avahi-daemon chromium fonts-noto-cjk || true
+  hostapd dnsmasq avahi-daemon chromium fonts-noto-cjk fonts-noto-color-emoji || true
 
 # 2. venv + 의존성
 cd "$ROOT/backend"

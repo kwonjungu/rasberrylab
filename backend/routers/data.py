@@ -14,6 +14,35 @@ from services.data_loader import store
 router = APIRouter(prefix="/api/data", tags=["data"])
 
 
+def _port_for(sensor) -> str:
+    """멀티포트 펌웨어(firmware_multi.ino) 규칙에 맞춘 권장 포트.
+    아날로그→A0(유일), 온습도/방수온도→D2, 그 외 디지털→D5."""
+    sid = sensor.id
+    if sid in ("dht11", "digital-temp", "ds18b20"):
+        return "D2"
+    if (getattr(sensor, "interface", "") or "").lower() == "analog":
+        return "A0"
+    return "D5"
+
+
+def _wiring_hints(exp) -> list[str]:
+    """라비가 시작할 때 들려주는 '어디에 뭘 꽂아라' 안내(쉬운 한국어)."""
+    by_id = {s.id: s for s in store.sensors}
+    hints: list[str] = []
+    for sid in (exp.required_sensors + exp.required_actuators):
+        s = by_id.get(sid)
+        if not s:
+            continue
+        port = _port_for(s)
+        name = s.name_ko or sid
+        where = "아날로그 자리 <b>A0</b>" if port == "A0" else f"<b>{port}</b> 자리"
+        hints.append(
+            f"🔌 <b>{name}</b>를 꺼내자! 신호선(S 또는 화살표)은 보드의 {where}에, "
+            f"가운데 선(VCC)은 <b>3V3</b>, 검은 선(GND)은 <b>GND</b>에 꼭 꽂아줘."
+        )
+    return hints
+
+
 @router.get("/validate")
 async def validate():
     """4개 JSON의 무결성 리포트(항목 수, 학년별 실험 수, 미사용 센서, 누락 매핑, 오류/경고)."""
@@ -45,7 +74,12 @@ async def get_experiments(grade: int | None = Query(None), unit_id: str | None =
         items = [e for e in items if e.grade == grade]
     if unit_id:
         items = [e for e in items if e.unit_id == unit_id]
-    return {"count": len(items), "experiments": [e.model_dump() for e in items]}
+    out = []
+    for e in items:
+        d = e.model_dump()
+        d["wiring_hints"] = _wiring_hints(e)
+        out.append(d)
+    return {"count": len(items), "experiments": out}
 
 
 @router.get("/experiments/{exp_id}")

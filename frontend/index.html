@@ -126,6 +126,12 @@
           <div class="bf-speech" x-text="briefLine"></div>
         </div>
 
+        <!-- 🔌 라비의 연결 안내 — 시작할 때 항상 "어디에 뭘 꽂아라" -->
+        <div class="bf-block bf-wiring" x-show="briefing?.wiring_hints?.length">
+          <div class="bf-h">🔌 라비: 먼저 이렇게 연결해요!</div>
+          <ul><template x-for="w in (briefing?.wiring_hints||[])" :key="w"><li x-html="w"></li></template></ul>
+        </div>
+
         <div class="bf-chips">
           <span class="chip" x-text="'⭐ 난이도 ' + (briefing?.difficulty)"></span>
           <span class="chip" x-text="'⏱ ' + (briefing?.duration_min) + '분'"></span>
